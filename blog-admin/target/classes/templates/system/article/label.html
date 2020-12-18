@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>文章标签</title>
+    <link rel="shortcut icon" href="/static/images/fav/sysFav.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/hover-button.css">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <link rel="stylesheet" href="/static/toastr/toastr.min.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/loading.js"></script>
+    <script src="/static/toastr/toastr.min.js"></script>
+    <script>
+        // 初始化弹窗样式
+        toastr.options = {
+            positionClass: "toast-top-center",
+        };
+    </script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main">
+        <div id="bg">
+            <!--导航栏-->
+            <div th:replace="/system/common/nav :: nav"></div>
+            <div style="margin-top: 60px">
+                <ol class="breadcrumb" style="background: #ffffff;">
+                    <li><a href="/system/dashboard">仪表</a></li>
+                    <li><a href="/system/article">所有文章</a></li>
+                    <li class="active">文章标签</li>
+                </ol>
+            </div>
+            <!--主体-->
+            <div class="row">
+                <!--最新文章-->
+                <div class="col-md-5 col-sm-12" style="margin-bottom: 20px">
+                    <div style="background: #ffffff;padding: 20px">
+                        <div class="row">
+                            <span style="padding-left: 20px;font-size: 15px">
+                                添加标签
+                            </span>
+                            <hr/>
+                        </div>
+                        <div class="row" style="margin:0;padding: 0 20px">
+                            <div class="row" style=";margin: 5px 0">
+                                <div class="row">标签名称</div>
+                                <div class="row">
+                                    <input type="text" class="form-control" id="labelName" name="0" placeholder="标签名称">
+                                </div>
+                            </div>
+
+                            <div class="row" style=";margin: 5px 0">
+                                <button type="button" id="labelSubmit" onclick="subLabel()" class="btn btn-info">提 交</button>
+                                <button type="button" id="labelNewButton" style="display:none" onclick="labelNew()" class="btn btn-default">返回添加</button>
+                                <button type="button" id="labelToMenu" style="display:none" onclick="toMenu()" class="btn btn-info">添加到菜单</button>
+                                <button type="button" id="labelDeleteButton" style="display:none;float:right;" onclick="labelDelete()" class="btn btn-danger">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--操作记录-->
+                <div class="col-md-7 col-sm-12" style="margin-bottom: 20px">
+                    <div style="background: #ffffff;padding: 20px">
+                        <div class="row">
+                            <span style="padding-left: 20px;font-size: 15px">
+                                所有标签
+                            </span>
+                            <hr/>
+                        </div>
+                        <div id="allLabel" th:fragment="allLabel" class="row" style="padding: 0 20px" >
+                            <a href="javascript:;"   th:each="label:${labels}" style="line-height: 2;cursor:hand" class="un">
+                                <span th:id="${label.id}"
+                                      th:text="${label.name}"
+                                      onclick="labelUpdate(this)"
+                                      class="span-categories"
+                                      style="white-space: nowrap">测试</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!--尾部版权栏-->
+    <div th:replace="/system/common/nav-tail :: nav-tail">
+    </div>
+</div>
+</body>
+<script>
+    loadNav();
+    loadLable();
+
+    function loadNav(){
+        $('#nav-sys').load('/system/nav');
+    }
+
+    function loadLable(){
+        $('#allLabel').load("/system/article/label/query");
+    }
+
+    function labelUpdate(obj){
+        $("#labelName").attr("name",$(obj).attr("id"))
+        $("#labelName").val($(obj).text())
+        $("#labelSubmit").text("修 改");
+        $("#labelDeleteButton").css("display","inline");
+        $("#labelNewButton").css("display","inline");
+        $("#labelToMenu").css("display","inline");
+
+    }
+    function labelNew(){
+        $("#labelName").val("")
+        $("#labelName").attr("name",0)
+        $("#labelSubmit").text("提 交");
+        $("#labelDeleteButton").css("display","none");
+        $("#labelNewButton").css("display","none");
+        $("#labelToMenu").css("display","none");
+    }
+
+    function labelDelete(){
+        const url = "/system/article/label/delete"
+        let form = new FormData
+        form.append("labelId",$('#labelName').attr("name"))
+        $.ajax({
+            url: url,
+            type: 'post',
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            data: form,
+            success: function (data){
+                toastr.success(data.mes)
+                loadLable()
+            },
+            error:function (){
+                toastr.error("后端异常")
+            }
+        })
+
+        this.loadLable()
+
+        this.labelNew()
+    }
+    function subLabel(){
+        if ($('#labelName').val()==''){
+            toastr.warning("请填写标签名称！")
+        }else{
+            let form = new FormData
+            form.append("id",$('#labelName').attr("name"))
+            form.append("name",$('#labelName').val())
+            $.ajax({
+                url: '/system/article/label/update',
+                type: 'post',
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                data: form,
+                success: function (data){
+                    toastr.success(data.mes)
+                    labelNew()
+                    loadLable()
+                },
+                error:function (){
+                    toastr.error("后端异常")
+                }
+            })
+        }
+    }
+    function toMenu(){
+        let tagName = $("#labelName").val()
+        let tagAddress = "/tag/"+$("#labelName").val()
+        let url = "/system/administration/menu/add"
+        let form = new FormData
+        form.append("name",tagName)
+        form.append("address",tagAddress)
+        $.ajax({
+            url: url,
+            data: form,
+            type: 'post',
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (data){
+                toastr.success(data.mes)
+                labelNew()
+            }
+        })
+
+
+    }
+</script>
+<style>
+    .span-categories{
+        color: #00aeff;
+        background: rgba(128, 189, 245, 0.2);
+        border-radius: 5px;
+        padding: 2px 5px;
+        border: 1px solid rgba(24,144,255,0.3);
+        font-weight: lighter;
+        margin: 5px 5px;
+    }
+</style>
+</html>

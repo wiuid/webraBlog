@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.webra.mapper.FileHashMapper">
+    <resultMap type="FileHash" id="fileHashResult">
+        <id     property="manufacturerId"   column="manufacturer_id"    />
+        <result property="fileName"         column="file_name"          />
+        <result property="fileHash"         column="file_hash"          />
+        <result property="createTime"       column="create_time"        />
+    </resultMap>
+
+    <insert id="insertFileHash" parameterType="FileHash">
+        insert into `file_hash` (manufacturer_id,file_name,file_hash,create_time) values (#{manufacturerId},#{fileName},#{fileHash},sysdate());
+    </insert>
+
+
+    <delete id="delFileHash">
+        delete from `file_hash` where file_hash = #{fileHash} limit 1
+    </delete>
+
+    <select id="queFileHashByManufacturerId" resultMap="fileHashResult">
+        select * from `file_hash` where manufacturer_id=#{manufacturerId}
+        order by create_time desc
+    </select>
+
+    <select id="queFileHashByFileHash" resultMap="fileHashResult">
+        select * from `file_hash` where file_hash = #{fileHash} limit 1
+    </select>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.webra.mapper.PageMapper">
+    <resultMap type="Page" id="pageResult">
+        <id     property="id"           column="id"             />
+        <result property="name"         column="name"           />
+        <result property="nickname"     column="nickname"       />
+        <result property="text"         column="text"           />
+        <result property="createTime"   column="create_time"    />
+        <result property="updateTime"   column="update_time"    />
+    </resultMap>
+
+    <insert id="insertPage" parameterType="Page">
+        insert into `page`(`name`,nickname,text,create_time,update_time) value
+        (#{name},#{name},#{text},sysdate(),sysdate())
+    </insert>
+
+    <delete id="delPage" parameterType="Integer">
+        delete from `page` where id=#{id} limit 1
+    </delete>
+
+    <update id="updPage" parameterType="Page">
+        update `page`
+        <set>
+            <if test="name != null and name != ''">`name`=#{name},</if>
+            <if test="nickname != null and nickname != ''">nickname=#{nickname},</if>
+            <if test="text != null and text != ''">text=#{text},</if>
+            update_time=sysdate()
+        </set>
+        where id=#{id} ;
+    </update>
+
+    <select id="quePageById" parameterType="Integer" resultMap="pageResult">
+        select * from `page` where id=#{id} limit 1;
+    </select>
+
+    <select id="quePageByName" parameterType="String" resultMap="pageResult">
+        select * from `page` where nickname=#{name} limit 1;
+    </select>
+
+    <select id="quePageAll" resultMap="pageResult">
+        select id,`name`,nickname,create_time
+        from `page`
+        where id!=1
+        order by create_time desc
+    </select>
+
+
+
+</mapper>

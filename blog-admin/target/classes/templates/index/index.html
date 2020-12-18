@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!-- 屏幕宽度自适应，完全不缩放 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="shortcut icon" href="/static/images/fav/favicon.ico" type="image/x-icon">
+    <title th:text="${blogName}"></title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/hover-button.css">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <link rel="stylesheet" href="/static/css/loading.css">
+    <link rel="stylesheet" href="/static/css/tagCloud.css">
+    <link rel="stylesheet" href="/static/css/nav-index.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/loading.js"></script>
+</head>
+<body>
+
+<div class="loading_bg">
+    <div class="jiazai_div">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+    </div>
+</div>
+<!--顶部导航-->
+<div th:replace="/index/common/nav :: nav"></div>
+
+<div id="container" class="container">
+    <section class="main">
+        <div class="bg">
+
+
+            <!--轮播图及博主信息-->
+            <div class="row" >
+                <!--轮播图-->
+                <div class="col-md-9"   style="border-radius: 10px;margin-bottom: 20px">
+                    <div id="slidershow" th:fragment="rotograms" class="carousel slide" data-ride="carousel" style="border-radius: 30px;">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" th:each="article:${articles}" th:attr="data-slide-to=${articleStat.index}" th:class="articleStat.index eq 0 ? 'active' : ''"></li>
+                        </ol>
+
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner" role="listbox"  style="border-radius: 30px">
+                            <div th:each="article:${articles}" th:class="${articleStat.index eq 0 ? 'item active' : 'item'}">
+                                <a class="un" th:href="${article.id} eq 0 ? 'javascript:;':'/article/'+${article.id}">
+                                    <img th:src="${article.coverMap}" width="100%">
+                                </a>
+                                <div class="carousel-caption">
+                                    <h3 th:text="${article.title}" style="color: #333333">图1</h3>
+                                    <span class="spanHiddenArchive" th:text="${article.synopsis}" style="color: #333333">我很晒气</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Controls -->
+                        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                        <script>
+                            /*自动轮播速度*/
+                            $("#slidershow").carousel({
+                                interval:2000
+                            });
+                            /*上一页*/
+                            $("#slidershowcarousel a.left").click(function(){
+                                $(".").carousel("prev");
+                            });
+                            /*下一页*/
+                            $("#slidershow a.right").click(function(){
+                                $(".carousel").carousel("next");
+                            });
+                            /*点击小圆点改变轮播图*/
+                            $('#slidershow li').click(function (){
+                                const index = $(this).attr('data-slide-to')
+                                $('#slidershow').carousel(parseInt(index))
+                            })
+                        </script>
+                    </div>
+                </div>
+                <!--博客信息-->
+                <div  class="col-md-3 visible-md visible-lg">
+                    <div id="infoTag" th:fragment="infoTag">
+                        <br/>
+                        <img onclick="updateTagStyle()" th:src="${portrait}" alt="头像" class="img-rounded center-block" style="height: 80px;width: 80px;user-select: none">
+                        <br/>
+                        <p class="text-center" style="cursor:default;user-select: none">
+                            <a onclick="updateTagStyle()" class="un">
+                                <span th:text="${nickname}"></span>
+                            </a>
+                        </p>
+                        <!-- 标签云 -->
+                        <div id="tagCloud">
+                            <a th:each="tag:${tags}"  th:href="'/tag/' + ${tag.name}" target="_blank"><span th:text="${tag.name}" class=""></span></a>
+                        </div>
+                        <hr/>
+                        <!--友链-->
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <!--文章主体循环-->
+                <div th:each="article:${articlesList}"  class="row box-shadow" style="margin-top: 20px;background: rgba(255,255,255,0.9);border-radius: 20px;margin-right: 1px;margin-left: 1px;padding: 7px">
+                    <div class="col-md-3 col-sm-5 col-xs-12" style="margin-top: 10px">
+                        <a th:href="@{'/article/' + ${article.id}}" class="un" target="_blank">
+                            <img th:src="${article.coverMap}" alt="文章图" class="img-rounded img-responsive" width="100%">
+                        </a>
+                    </div>
+                    <div style="position: relative;height: 150px" class="col-md-9 col-sm-7 col-xs-12">
+                        <h3>
+                            <a th:href="@{'/article/' + ${article.id}}" class="un" target="_blank">
+                                <span th:text="${article.title}"></span>
+                            </a>
+                        </h3>
+                        <span class="spanHidden" th:text="${article.synopsis}"></span>
+                        <span style="color: #9b9b9b;margin-right: 20px;float:left;position:absolute;bottom:0;right:0;text-align:right">
+                            <span th:text="${#dates.format(article.createTime, 'yyyy/MM/dd HH:mm')}"></span>
+                            <i class="glyphicon glyphicon-calendar"></i>
+                            &nbsp;|&nbsp;
+                            <span th:text="${article.classificationName}"></span>
+                            <i class="glyphicon glyphicon-folder-open"></i>
+                            &nbsp;|&nbsp;
+                            <span th:text="${article.comments}"></span>
+                            <i class="glyphicon glyphicon-comment"></i>
+                            &nbsp;|&nbsp;
+                            <span th:text="${article.views}"></span>
+                            <i class="glyphicon glyphicon-eye-open"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--悬浮按钮-->
+    <div class="hoverButton hideButton" style="display:none">
+        <button id="top">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+        </button>
+    </div>
+
+    <!--尾部版权信息-->
+    <div th:replace="/index/common/nav-tail :: nav-tail"></div>
+
+</div>
+</body>
+
+<script>
+    document.onreadystatechange = subSomething;//当页面加载状态改变的时候执行这个方法.
+    function subSomething(){
+        if(document.readyState == "complete"){ //当页面加载状态为完全结束时进入
+            $(".loading_bg").fadeOut(200);      //你要做的操作。
+        }
+    }
+
+
+    loadNav();
+    loadInfoTag();
+    loadRotograms();
+
+    window.onload = function(){
+        updateTagStyle();
+    }
+
+    $(function(){
+        // 回到顶部  有简单的动画,由快到慢的 滑动到顶部
+        $('#top').click(function (){
+            // window.scrollTo(0,0)
+            $("html,body").animate({scrollTop:0},500);
+        })
+
+        // 当滚动条大于离顶部 多少距离后  显示 某div模块,
+        // 向上滚动时  隐藏   向下滚动 显示
+        $(window).bind("scroll", function () {
+            var sTop = $(window).scrollTop();
+            var sTop = parseInt(sTop);
+            if (sTop >= 200) {
+                if (!$(".hideButton").is(":visible")) {
+                    try {
+                        $(".hideButton").slideDown();
+                    } catch (e) {
+                        $(".hideButton").show();
+                    }
+                }
+            }
+            else {
+                if ($(".hideButton").is(":visible")) {
+                    try {
+                        $(".hideButton").slideUp();
+                    } catch (e) {
+                        $(".hideButton").hide();
+                    }
+                }
+            }
+        });
+    });
+    // 更换标签样式
+    function updateTagStyle(){
+        let tagCloud = ['tag-purple','tag-green','tag-contrast','tag-javascript','tag-typescript','tag-angular','tag-firebase','tag-vue','tag-rxjs','tag-cloud-functions','tag-node','tag-cloud-functions','tag-flutter','tag-google-maps"','tag-android','tag-stripe','tag-machine-learning','tag-python','tag-svelte','tag-react','tag-ios','tag-svelte','tag-minimum-viable-product','tag-ionic','tag-nest','tag-graphql','tag-electron']
+        var tagSpan = $("#tagCloud").find("a > span");
+        tagSpan.each(function(index,e){
+            let ind = Math.floor((Math.random()*tagCloud.length))
+            let cls = "tag " + tagCloud[ind]
+            $(e).attr("class",cls)
+        })
+    }
+
+    // 异步刷新个人信息及标签云
+    function loadInfoTag(){
+        $('#infoTag').load("/index/info/tag");
+    }
+    function loadRotograms(){
+        $("#slidershow").load('/index/rotograms')
+    }
+    function loadNav(){
+        $('#nav-index').load('/index/nav');
+        $('#nav-tail').load('/index/nav/tail');
+    }
+
+
+</script>
+<style>
+
+    /*轮播图上一页的阴影*/
+    .carousel-control.left {
+
+        background-image:none;
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
+    }
+    /*轮播图下一页的阴影*/
+    .carousel-control.right {
+        left: auto;
+        right: 0;
+        background-image:none;
+        background-repeat: repeat-x;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
+    }
+
+
+</style>
+
+</html>
+
+

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.webra.mapper.LabelMapper">
+    <resultMap type="Label" id="labelResult">
+        <id     property="id"           column="id"             />
+        <result property="name"         column="name"           />
+        <result property="createTime"   column="create_time"    />
+        <result property="updateTime"   column="update_time"    />
+    </resultMap>
+
+    <insert id="insertLabel" parameterType="Label" useGeneratedKeys="true" keyProperty="id">
+        insert into `label` (
+        name,
+        create_time,
+        update_time
+        ) value(
+        #{name},
+        sysdate(),
+        sysdate()
+        );
+    </insert>
+
+    <delete id="delLabel">
+        delete from `label`
+        where id=#{id}
+        limit 1
+    </delete>
+
+    <update id="updLabel" parameterType="Label">
+        update `label` set
+        `name`=#{name},
+        update_time=sysdate()
+        where id=#{id}
+    </update>
+
+    <select id="queLabelAll" resultMap="labelResult">
+        select * from `label`;
+    </select>
+
+    <select id="queLabelById" resultMap="labelResult">
+        select * from `label`
+        where id=#{id}
+        limit 1
+    </select>
+
+    <select id="queLabelByIds" resultMap="labelResult">
+        select * from `label`
+        where id in
+        <foreach collection="ids" item="id" index="index"
+                 open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="queLabelByName" resultMap="labelResult">
+        select * from `label`
+        where `name`=#{name}
+        limit 1
+    </select>
+
+    <select id="queLabelTotal" resultType="Integer">
+        select count(*) from `label`;
+    </select>
+
+</mapper>

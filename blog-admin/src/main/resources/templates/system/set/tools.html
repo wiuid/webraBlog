@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>小工具</title>
+    <link rel="shortcut icon" href="/static/images/fav/sysFav.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/hover-button.css">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/loading.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main">
+        <div id="bg">
+            <!--导航栏-->
+            <div th:replace="/system/common/nav :: nav"></div>
+            <div style="margin-top: 60px">
+                <ol class="breadcrumb" style="background: #ffffff;">
+                    <li><a href="/system/dashboard">仪表</a></li>
+                    <li class="active">小工具</li>
+                </ol>
+            </div>
+            <!--主体-->
+            <div style="height: 1000px;background: #ffffff;border-radius: 5px;padding: 20px 10px">
+                <div class="row" style="margin: 0">
+                    <span>
+                        工具首先是备份
+                    </span>
+                </div>
+                <div class="row" style="margin: 0">
+                    <span>
+                        或者可以把缩短链接的那个加上，那个简单
+                    </span>
+                </div>
+                <div class="row" style="margin: 0">
+                    <span>
+                        再来个监控系统资源的
+                    </span>
+                </div>
+                <div class="row" style="margin: 0">
+                    <span>
+                        以上暂定，先不做
+                    </span>
+                </div>
+                <div class="row" style="margin: 0"></div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!--尾部版权栏-->
+    <div th:replace="/system/common/nav-tail :: nav-tail">
+    </div>
+</div>
+
+
+</body>
+<script>
+    loadNav();
+
+    function loadNav(){
+        $('#nav-sys').load('/system/nav');
+    }
+</script>
+</html>

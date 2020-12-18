@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>top.webra</groupId>
+    <artifactId>webra-blg</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>webra</name>
+    <url>https://webra.top</url>
+    <description>迷雾博客系统</description>
+
+    <modules>
+        <module>blog-admin</module>
+        <module>blog_utils</module>
+        <module>blog_service</module>
+        <module>blog_security</module>
+        <module>blog_quartz</module>
+    </modules>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+
+        <spring-boot-ver>2.2.4.RELEASE</spring-boot-ver>
+        <mybatis-boot-ver>2.1.3</mybatis-boot-ver>
+        <mysql-ver>8.0.19</mysql-ver>
+        <pagehelper-ver>1.2.13</pagehelper-ver>
+        <fastJSON-ver>1.2.74</fastJSON-ver>
+        <jjwt-ver>0.9.1</jjwt-ver>
+        <kaptcha-ver>2.3.2</kaptcha-ver>
+        <quartz-ver>2.3.2</quartz-ver>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- SpringBoot的依赖配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot-ver}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--持久层框架-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-boot-ver}</version>
+            </dependency>
+            <!--Mysql驱动包 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-ver}</version>
+            </dependency>
+            <!-- pagehelper 分页插件-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-ver}</version>
+            </dependency>
+
+            <!-- 阿里云JSON解析器 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastJSON-ver}</version>
+            </dependency>
+            <!-- JWT生成与解析 -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt-ver}</version>
+            </dependency>
+
+            <!--定时任务-->
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz-ver}</version>
+            </dependency>
+
+
+            <!--验证码 -->
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha-ver}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!--指定使用maven打包-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>utf-8</encoding>
+                    <useDefaultDelimiters>true</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

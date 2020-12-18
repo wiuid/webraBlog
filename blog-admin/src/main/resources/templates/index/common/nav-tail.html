@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>nav</title>
+</head>
+<body>
+<div  id="nav-tail"  th:fragment="nav-tail">
+<div class="footer">
+    <div class="container">
+        <hr>
+        <div class="row footer-bottom">
+            <ul class="list-inline text-center">
+                <li>
+                    <span style="line-height:50px!important;user-select: none">
+                        <span th:utext="${info}"></span>
+<!--                        Copyright © 2020 WebRA-->
+<!--                        <a href="#" class="un font-red">-->
+<!--                            <b>-->
+<!--                                京ICP备19057153号-1-->
+<!--                            </b>-->
+<!--                        </a>-->
+<!--                        Design by-->
+<!--                        <a href="https://www.webra.top" class="un font-red">-->
+<!--                            <b>-->
+<!--                                WebRA-->
+<!--                            </b>-->
+<!--                        </a>-->
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>
+</body>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.webra.mapper.ArticleMapper">
+
+    <resultMap type="Article" id="articleResult">
+        <id     property="id"               column="id"         />
+        <result property="title"            column="title"      />
+        <result property="coverMap"         column="cover_map"  />
+        <result property="synopsis"         column="synopsis"   />
+        <result property="state"            column="state"      />
+        <result property="rotograms"        column="rotograms"  />
+        <result property="userId"           column="user_id"    />
+        <result property="text"             column="text"       />
+        <result property="classificationId" column="classification_id"   />
+        <result property="comments"         column="comments"      />
+        <result property="views"            column="views"         />
+        <result property="createTime"       column="create_time"   />
+        <result property="updateTime"       column="update_time"   />
+
+        <result property="classificationName"       column="name"  />
+        <result property="userNickname"      column="nickname"     />
+        <result property="classifyId"        column="classifyId"   />
+    </resultMap>
+
+    <sql id="articleParam">
+        select id,title,cover_map,synopsis,state,user_id,text,classification_id,comments,views,create_time,updete_time
+		from `article`
+    </sql>
+
+    <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id">
+        insert into `article` (
+        <if test="title != null and title != ''">title,</if>
+        <if test="coverMap != null and coverMap != ''">cover_map,</if>
+        <if test="synopsis != null and synopsis != ''">synopsis,</if>
+        <if test="state != null and state != ''">state,</if>
+        <if test="userId != null and userId != ''">user_id,</if>
+        <if test="text != null and text != ''">text,</if>
+        <if test="classificationId != null and classificationId != ''">classification_id,</if>
+        create_time,
+        update_time
+        )
+        value (
+        <if test="title != null and title != ''">#{title},</if>
+        <if test="coverMap != null and coverMap != ''">#{coverMap},</if>
+        <if test="synopsis != null and synopsis != ''">#{synopsis},</if>
+        <if test="state != null and state != ''">#{state},</if>
+        <if test="userId != null and userId != ''">#{userId},</if>
+        <if test="text != null and text != ''">#{text},</if>
+        <if test="classificationId != null and classificationId != ''">#{classificationId},</if>
+        sysdate(),
+        sysdate()
+        )
+    </insert>
+
+    <delete id="delArticle" parameterType="Integer">
+        delete from `article`
+        where id=#{id}
+    </delete>
+
+    <update id="updArticle" parameterType="Article">
+        update `article`
+        <set>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="coverMap != null and coverMap != ''">cover_map = #{coverMap},</if>
+            <if test="synopsis != null and synopsis != ''">synopsis = #{synopsis},</if>
+            <if test="state != null and state != ''">`state` = #{state},</if>
+            <if test="rotograms != null">rotograms = #{rotograms},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="text != null and text != ''">text = #{text},</if>
+            <if test="classificationId != null">classification_id = #{classificationId},</if>
+            update_time = sysdate()
+        </set>
+        where id=#{id};
+    </update>
+
+    <update id="updArticleViews" parameterType="Integer">
+        update `article` set views = views+1
+        where id = #{articleId} ;
+    </update>
+    <update id="updArticleComments" parameterType="Integer">
+        update `article` set comments = comments+1
+        where id = #{articleId} ;
+    </update>
+
+    <select id="queArticleAllRotograms" resultMap="articleResult">
+        select a.id,a.title,a.cover_map,a.synopsis,a.rotograms,a.classification_id,a.comments,a.views,a.create_time,c.name
+        from `article` a
+        left join `classification` c on c.id = a.classification_id
+        where a.state='发表'
+        and rotograms = 1
+        order by a.create_time desc
+    </select>
+
+    <select id="queArticleById" parameterType="Integer" resultMap="articleResult">
+        select article.*,c.name,u.nickname
+        from `article`
+        left join `classification` c on c.id = `article`.classification_id
+        left join user u on u.id = article.user_id
+        where article.id=#{id}
+        limit 1
+    </select>
+
+    <select id="queArticleByIds" parameterType="Integer" resultMap="articleResult">
+        select article.*,c.name
+        from `article`
+        left join `classification` c on c.id = `article`.classification_id
+        where article.id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="queArticleTotal" resultType="Integer">
+        select count(*) from `article`;
+    </select>
+    <select id="queArticleViewsTotal" resultType="Integer">
+        select sum(views) from `article`;
+    </select>
+    <select id="queArticleRotogramsTotal" resultType="Integer">
+        select count(*) from `article` where state='发表' and rotograms=1;
+    </select>
+    <select id="queArticleSearch" resultMap="articleResult" >
+        select article.*,c.id as classifyId,c.name
+        from `article`
+        left join `classification` c on c.id = `article`.classification_id
+        <where>
+            <if test="title != null and title != ''">title like '%${title}%'</if>
+            <if test="state != null and state != ''"> AND `state`=#{state}</if>
+            <if test="classificationId != null"> AND classification_id=#{classificationId}</if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

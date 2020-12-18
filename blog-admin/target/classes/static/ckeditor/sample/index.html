@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr"></html>
+<head>
+	<title>CKEditor 5 ClassicEditor build</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body data-editor="ClassicEditor" data-collaboration="false">
+
+	<main>
+
+
+				<div class="editor">
+					<h2>Bilingual Personality Disorder</h2>
+					<figure class="image image-style-side"><img src="https://c.cksource.com/a/1/img/docs/sample-image-bilingual-personality-disorder.jpg">
+						<figcaption>One language, one person.</figcaption>
+					</figure>
+					<p>
+						More recent <a href="https://books.google.pl/books?id=1LMhWGHGkRUC">studies</a> show, the language a person speaks affects
+						their cognition, behaviour, emotions and hence <strong>their personality</strong>.
+						This shouldn’t come as a surprise
+						<a href="https://en.wikipedia.org/wiki/Lateralization_of_brain_function">since we already know</a> that different regions
+						of the brain become more active depending on the person’s activity at hand. Since structure, information and especially
+						<strong>the culture</strong> of languages varies substantially and the language a person speaks is an essential element of daily life.
+					</p>
+				</div>
+
+
+	</main>
+
+	<script src="../build/ckeditor.js"></script>
+	<script>
+		ClassicEditor.create( document.querySelector( '.editor' ), {
+
+				toolbar: {
+					items: [
+						'heading',
+						'|',
+						'bold',
+						'italic',
+						'fontColor',
+						'fontSize',
+						'removeFormat',
+						'horizontalLine',
+						'link',
+						'bulletedList',
+						'numberedList',
+						'|',
+						'alignment',
+						'indent',
+						'outdent',
+						'code',
+						'codeBlock',
+						'|',
+						'imageInsert',
+						'blockQuote',
+						'insertTable',
+						'undo',
+						'redo'
+					]
+				},
+				language: 'zh-cn',
+				licenseKey: '',
+			} )
+			.then( editor => {
+				window.editor = editor;
+			} )
+			.catch( error => {
+				console.error( 'Oops, something went wrong!' );
+				console.error( 'Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:' );
+				console.warn( 'Build id: 8ev5iw2xhm1v-4e36vin8xw6n' );
+				console.error( error );
+			} );
+	</script>
+</body>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>文章编辑</title>
+    <link rel="shortcut icon" href="/static/images/fav/sysFav.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/hover-button.css">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <link href="/static/toastr/toastr.css" rel="stylesheet" />
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/loading.js"></script>
+    <script src="/static/tinymce/tinymce.min.js"></script>
+    <script src="/static/toastr/toastr.min.js"></script>
+    <link href="/static/select2/css/select2.min.css" rel="stylesheet" />
+    <script src="/static/select2/js/select2.min.js"></script>
+
+    <script language="javascript" type="text/javascript" src="/static/datepicker/WdatePicker.js"></script>
+    <script>
+        // 初始化弹窗样式
+        toastr.options = {
+            positionClass: "toast-top-center",
+        };
+    </script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main">
+        <div id="bg">
+            <!--导航栏-->
+            <div th:replace="/system/common/nav :: nav"></div>
+            <div style="margin-top: 60px">
+                <ol class="breadcrumb" style="background: #ffffff;">
+                    <li><a href="/system/dashboard">仪表</a></li>
+                    <li><a href="/system/article">所有文章</a></li>
+                    <li class="active">编辑文章</li>
+                </ol>
+            </div>
+            <!--主体-->
+            <div class="row" style="background: #ffffff;border-radius: 5px;margin: 20px 0px">
+                <input id="title" th:value="${article.title}" type="text" class="form-control"  placeholder="输入标题" style="width: 100%">
+            </div>
+            <div class="row" style="margin: 0 0 60px 0;border-radius: 5px">
+                <textarea class="imgAutoWidth" th:text="${article.text}" id="mytextarea" ></textarea>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-default navbar-fixed-bottom box-shadow text-right" style="background: #ffffff;padding:5px 100px 0 0">
+        <input class="btn btn-info" type="button" value="发布" data-toggle="modal" data-target="#exampleModal">
+    </nav>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">文章设置</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin: 0 10px">
+                        <div class="col-sm-6 col-xs-12" style="margin-bottom: 10px">
+                            <div class="row">开启评论:<small>当前不开启</small></div>
+                            <div class="row">
+                                <input disabled type="radio" name="isComment" value="0" checked="checked">开启
+                                <input disabled type="radio" name="isComment" value="1">关闭<br/>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12" style="margin-bottom: 10px">
+                            <div class="row">是否置顶:<small>当前不开启</small></div>
+                            <div class="row">
+                                <input disabled type="radio" name="isTopping" value="0" checked="checked">是
+                                <input disabled type="radio" name="isTopping" value="1">否
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0 10px">
+                        <div class="col-sm-6 col-xs-12" style="margin-bottom: 10px">
+                            <div class="row">文章状态:</div>
+                            <div class="row">
+                                <input type="radio" name="isDraft" value="发表" checked="checked">发布
+                                <input type="radio" name="isDraft" value="草稿">草稿
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12" style="margin-bottom: 10px">
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-6" style="padding: 0">发布时间:</div>
+                                <div class="col-sm-6 col-xs-6" style="padding: 0">定时:<input disabled id="timing" onclick="editDate()" type="checkbox" name="timing"></div>
+                            </div>
+                            <div class="row">
+                                <input id="d11" style="display: inline" type="text" onclick="dateD11()" onblur="getDate()" class="Wdate"/>
+                                <input id="d12" style="display: none" type="text" onclick="dateD12()" class="Wdate"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0 10px">
+                        <div class="row">分类目录:</div>
+                        <div class="row" style="margin-bottom: 10px">
+                            <select id="classify" style="width: 100%;">
+                                <option th:each="classify:${classifications}" th:value="${classify.id}"><span th:text="${classify.name}"></span></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0 10px">
+                        <div class="row">标签:</div>
+                        <div class="row" style="margin-bottom: 10px">
+                            <select id="label" style="width: 100%;" multiple >
+                                <option th:each="label:${labels}" th:value="${label.id}"><span th:text="${label.name}"></span></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0 10px">
+                        <div class="row">摘要:</div>
+                        <div class="row" style="margin-bottom: 10px">
+                            <textarea th:text="${article.synopsis}"
+                                      id="synopsis"
+                                      class="form-control"
+                                      placeholder="文章摘要,可不填..."
+                                      rows="3"
+                                      style="resize: none"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 0 10px">
+                        <div class="row">封面图:<small>默认系统自动生成</small></div>
+                        <div class="row">
+                            <div class="input-group" style="margin-bottom: 10px">
+                                <a  href="#" style="cursor:hand">
+                                    <input id="file1" type="file" accept="image/png, image/jpeg, image/jpg" onchange="changepic()" style="height: 0;width: 0"/>
+                                    <img th:src="${article.coverMap}" id="show1" onclick="document.getElementById('file1').click()" style="border-radius:5px;width: 400px">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <input type="text" id="file2" th:value="${article.coverMap}"  class="form-control" placeholder="网络地址">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: right">
+                    <button data-dissmiss="modal" type="button" onclick="getTag()" class="btn btn-info" style="float:left;">获取</button>
+                    <button data-dissmiss="modal" type="button" onclick="articleSubmit()" class="btn btn-info">发布</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--尾部版权栏-->
+    <div th:replace="/system/common/nav-tail :: nav-tail">
+    </div>
+
+</div>
+</body>
+
+<script th:inline="javascript">
+    loadNav();
+    // 拉取导航栏数据
+    function loadNav(){
+        $('#nav-sys').load('/system/nav');
+    }
+    // 选择器本地汉化
+    (function(){if(jQuery&&jQuery.fn&&jQuery.fn.select2&&jQuery.fn.select2.amd)var e=jQuery.fn.select2.amd;return e.define("select2/i18n/zh-CN",[],function(){return{errorLoading:function(){return"无法载入结果。"},inputTooLong:function(e){var t=e.input.length-e.maximum,n="请删除"+t+"个字符";return n},inputTooShort:function(e){var t=e.minimum-e.input.length,n="请再输入至少"+t+"个字符";return n},loadingMore:function(){return"载入更多结果…"},maximumSelected:function(e){var t="最多只能选择"+e.maximum+"个项目";return t},noResults:function(){return"未找到结果"},searching:function(){return"搜索中…"}}}),{define:e.define,require:e.require}})();
+
+    // 分类选择器,并初始化为文章所在的分类
+    $("#classify").select2({
+        language: "zh-CN",
+        placeholder: "选择分类...",
+        allowClear: true,
+        minimumResultsForSearch: -1
+    })
+    $("#classify").val([[${article.classificationId}]]).trigger('change')
+    // 标签选择器,并初始化文章所在的标签
+    $("#label").select2({
+        language: "zh-CN",
+        placeholder: "选择标签...",
+        minimumResultsForSearch: -1,
+        tags: true,
+    })
+    $("#label").val([[${articleLabels}]]).trigger('change')
+    // 标签选择器输入回车的方法
+    $(".select2-search__field").keydown(function (e){
+        if(e.keyCode===13){
+            console.log("sssssssssssssssssss")
+        }
+    })
+
+    function dateD11(){
+        WdatePicker({
+            dateFmt:'yyyy-MM-dd HH:mm',
+        })
+    }
+    function dateD12(){
+        WdatePicker({
+            dateFmt:'yyyy-MM-dd HH:mm',
+            minDate:'%y-%M-{%d+1}',
+        })
+    }
+    function editDate(){
+        if ($("#timing").is(":checked")) {
+            $("#d12").val("")
+            $("#d11").css("display","none")
+            $("#d12").css("display","inline")
+        }else {
+            $("#d11").val("")
+            $("#d12").css("display","none")
+            $("#d11").css("display","inline")
+        }
+    }
+
+
+    // 上传图片api
+    const imageUploadApi = "/system/article/upload/image"
+    // 文章发布api
+    const releaseArticleApi = "/system/article/edit/release"
+    // 获得文章id
+    const articleId = [[${article.id}]]
+
+    // 发布文章按钮
+    function articleSubmit(){
+        // 判断标题是否为空或null
+        if($("#title").val()==='' || $("#title").val() === null){
+            // 关闭模态框
+            $('#exampleModal').modal('hide');
+            // 消息提示
+            toastr.warning("标题不可为空!!","提示:")
+            // 打断方法执行
+            return
+        }
+        let form = new FormData()
+        // form.append("id", [[${article.id}]])
+        if ([[${article.id}]] === null){
+            form.append("id", 0)
+        }else{
+            form.append("id", articleId)
+        }
+
+        // 判断 简介是否有内容,如果没有则从正文截取200个字符填充到简介中
+        if ($("#synopsis").val() ==='' || $("#synopsis").val() === null){
+            var activeEditor = tinymce.activeEditor
+            var editBody = activeEditor.getBody();
+            activeEditor.selection.select(editBody);
+            var text = activeEditor.selection.getContent({ 'format': 'text' });
+            form.append("synopsis",text.substring(0,200))
+        }else{
+            form.append("synopsis",$("#synopsis").val())
+        }
+
+        // 分类id
+        let classificationId = $("#classify").select2("val")
+        // 标题   正文  状态  封面图  分类id 标签 ids
+        form.append("title",$("#title").val())
+        form.append("text",tinyMCE.activeEditor.getContent())
+        form.append("state",$("input:radio[name='isDraft']:checked").val())
+        form.append("coverMap",$("#file2").val())
+        console.log(classificationId)
+        form.append("classificationId",classificationId===null?1:classificationId)
+        form.append("labelArray",$("#label").val());
+
+        // 异步请求
+        $.ajax({
+            url: releaseArticleApi,
+            type: "post",
+            contentType: false,
+            processData: false,
+            data: form,
+            dataType: "json",
+            success: function (data){
+                if (data.code===200){
+                    $('#exampleModal').modal('hide');
+                    toastr.success(data.mes+'，即将跳转网页')
+                    setTimeout(function (){
+                        this.location.href="/system/article"
+                    },2000)
+                }else {
+                    this.error("发布失败!!!!")
+                }
+            },
+            error: function (err){
+                $('#exampleModal').modal('hide');
+                toastr.error("后端异常!!!!")
+            }
+        })
+    }
+
+    // 在id=file2的input中输入图片url之后,会替换网页中图片的src属性的地址,用来替换图片显示
+    $("#file2").bind("input",function(event){
+        $("#show1").attr("src",$("#file2").val());
+    });
+
+    // 封面图上传 返回结果赋值给图片src 显示给用户看
+    function changepic(file,imgs) {
+
+        let updFile = document.getElementById("file1").files[0];
+        let form = new FormData();
+        form.append("file",updFile)
+        $.ajax({
+            url: '/system/article/upload/cover/map',
+            type: "post",
+            // contentType: "multipart/form-data",
+            contentType: false,
+            processData: false,
+            data: form,
+            dataType: "json",
+            success: function (data){
+                if (data.code === "200"){
+                    $("#show1").attr("src",data.location)
+                    $("#file2").val(data.location)
+                }
+            },
+        })
+    }
+
+    // 富文本初始化及图片上传处理
+    tinymce.init({
+        menubar:false,
+        selector: '#mytextarea',
+        language:'zh_CN',
+        brandcsing: false,
+        autoScroll: true,
+        plugins: 'link lists preview wordcount autolink hr indent2em image imagetools table codesample autoresize fullscreen',
+        toolbar: 'formatselect fontsizeselect | forecolor backcolor bold italic underline strikethrough link hr| alignleft aligncenter alignright indent2em  lineheight | bullist numlist blockquote image table codesample preview fullscreen',
+        min_height: 640,
+        images_upload_url: imageUploadApi,
+
+    });
+
+    function getTag(){
+        let arr = $("#label").val()
+        for (let index = 0;index<arr.length;index++){
+            toastr.info(arr[index])
+        }
+
+    }
+
+</script>
+
+<style>
+    .imgAutoWidth img {
+        display: inline-block!important;
+        height: auto!important;
+        max-width: 100%!important;
+    }
+</style>
+</html>
