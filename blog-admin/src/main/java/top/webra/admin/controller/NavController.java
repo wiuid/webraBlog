@@ -47,6 +47,8 @@ public class NavController {
         List<Menu> menus = menuService.queMenuAll();
         List<Menu> menuList = menuService.getMenu(menus);
         model.addAttribute("menus",menuList);
+        Website website = websiteService.queWebsiteAll();
+        model.addAttribute("blogName",website.getName());
         return "index/common/nav::nav";
     }
     @GetMapping("/index/nav/tail")

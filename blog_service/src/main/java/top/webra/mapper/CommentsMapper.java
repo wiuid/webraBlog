@@ -23,6 +23,12 @@ public interface CommentsMapper {
      * @return
      */
     Integer delComment(@Param("id") Integer id);
+    /**
+     * 删除一个文章的所有评论
+     * @param articleId
+     * @return
+     */
+    Integer delCommentByArticleId(@Param("articleId") Integer articleId);
 
     /**
      * 删除一个一级评论的所有二级评论及自身

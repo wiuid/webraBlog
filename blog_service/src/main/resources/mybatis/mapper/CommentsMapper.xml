@@ -43,6 +43,10 @@
         delete from `comments`
         where id=#{id}
     </delete>
+    <delete id="delCommentByArticleId" parameterType="Integer">
+        delete from `comments`
+        where article_id=#{articleId}
+    </delete>
 
     <delete id="delCommentList" parameterType="Integer">
         delete from `comments`

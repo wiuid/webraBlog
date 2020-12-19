@@ -140,22 +140,28 @@ public class IndexController {
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        log.info("当前登录的用户信息:" + principal.toString() );
 
-        // 获取该文章的所有标签
-        List<ArticleLabel> articleLabels = articleLabelService.queArticleLabelByArticleId(articleId);
-        List<Integer> labelIds = articleLabelService.getLabelIds(articleLabels);
-        System.out.println(labelIds);
-        if (!labelIds.isEmpty()){
-            List<Label> labels = labelService.queLabelByIds(labelIds);
-            model.addAttribute("labels",labels);
-        }else{
+        Article article = articleService.queArticleById(articleId);
+        // 文章存在
+        if (article!=null){
+            // 获取该文章的所有标签
+            model.addAttribute("code",ResponseStateConstant.RESPONSE_SUCCESS);
+            List<ArticleLabel> articleLabels = articleLabelService.queArticleLabelByArticleId(articleId);
+            List<Integer> labelIds = articleLabelService.getLabelIds(articleLabels);
+            if (!labelIds.isEmpty()){
+                List<Label> labels = labelService.queLabelByIds(labelIds);
+                model.addAttribute("labels",labels);
+            }else{
+                // 该文章没有赋予标签
+                model.addAttribute("codeLabel",ResponseStateConstant.RESPONSE_FAILURE);
+            }
+
+            articleService.updArticleViews(articleId);
+            String blogName = websiteService.queWebsiteAll().getName();
+            model.addAttribute("blogName",article.getTitle()+" - "+blogName);
+            model.addAttribute("article",article);
+        }else {
             model.addAttribute("code",ResponseStateConstant.RESPONSE_FAILURE);
         }
-
-        articleService.updArticleViews(articleId);
-        Article article = articleService.queArticleById(articleId);
-        String blogName = websiteService.queWebsiteAll().getName();
-        model.addAttribute("blogName",article.getTitle()+" - "+blogName);
-        model.addAttribute("article",article);
         return "index/article";
     }
 

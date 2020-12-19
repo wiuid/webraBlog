@@ -10,6 +10,7 @@
     <title th:text="${blogName}">文章</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/default.css">
+    <link rel="stylesheet" href="/static/css/hover-button.css">
     <link rel="stylesheet" href="/static/css/loading.css">
     <link rel="stylesheet" href="/static/toastr/toastr.css"/>
     <link rel="stylesheet" href="/static/css/nav-index.css">
@@ -17,6 +18,9 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/loading.js"></script>
     <script src="/static/toastr/toastr.min.js"></script>
+
+
+    <script type="text/javascript" src="/static/js/costomJs.js"></script>
     <script>
         // 初始化弹窗样式
         toastr.options = {
@@ -25,7 +29,7 @@
     </script>
 </head>
 <body>
-
+<!--loading-->
 <div class="loading_bg">
     <div class="jiazai_div">
         <i></i>
@@ -43,7 +47,7 @@
             <div th:replace="/index/common/nav :: nav"></div>
 
             <!--文章主体-->
-            <div class="container" style="padding: 0">
+            <div th:if="${code} eq 200" class="container" style="padding: 0">
                 <div th:each="article:${article}" class="box-shadow" style="background: #fff;overflow: hidden;zoom: 1;border-radius: 15px">
                     <div style="padding: 25px;margin: 25px;border-radius: 25px">
                         <!--标题-->
@@ -63,7 +67,7 @@
                                  |
                                 <span th:text="${article.views}"></span>
                                 <i class="glyphicon glyphicon-eye-open"></i>
-                                <span th:if="${code} eq 404" style="margin-left:10px">
+                                <span th:if="${codeLabel} eq 404" style="margin-left:10px">
                                     暂无标签
                                 </span>
                                 <span th:if="${code} ne 404" style="margin-left:10px">
@@ -79,9 +83,14 @@
                     </div>
                 </div>
             </div>
-
+            <div th:if="${code} eq 404" class="text-center" style="margin-top: 30px;font-size: 20px">
+                <div clas="row">您查看的文章不存在</div>
+                <div clas="row" >
+                    <div th:replace="/index/common/sails :: sails"></div>
+                </div>
+            </div>
             <!--评论主体-->
-            <div  id="comments" class="container" th:fragment="comments" style="margin-top:10px;padding: 0">
+            <div th:if="${code} eq 200" id="comments" class="container" th:fragment="comments" style="margin-top:10px;padding: 0">
                 <div style="background: #fff;border-radius: 15px;overflow: hidden;zoom: 1;margin-left: 0" class="box-shadow">
                     <!-- 评论列表 -->
                     <div style="margin: 20px">
@@ -210,11 +219,10 @@
             <!--悬浮按钮-->
             <div class="hoverButton hideButton" style="display:none">
                 <button id="top">
-                    <!--回到顶部-->
                     <i class="glyphicon glyphicon-chevron-up"></i>
                 </button>
             </div>
-            <div class="hoverButton" style="top: 85%;left: 90%">
+            <div  class="hoverButton" style="top: 85%;left: 90%">
                 <button id="toCommentC" type="button">
                     <!--评论内容-->
                     <i class="glyphicon glyphicon-comment"></i>
@@ -329,23 +337,8 @@
             form.append("text",comment)
             // 这个代表的是评论谁的评论(0代表文章)
             form.append("reply",commentId)
-
-            // ajax请求
-            $.ajax({
-                type: "post",
-                cache: false,
-                contentType: false,
-                processData: false,
-                dataType: "json",
-                url: "/article/comment",
-                data: form,
-                success: function (data){
-                    if (data.code !== 200){
-                        toastr.warning(data.mes, "提示")
-                    }else{
-                        $('#comments').load(accessUrl);
-                    }
-                }
+            costomAjax('/article/comment',form,function(){
+                $('#comments').load(accessUrl);
             })
         }
     }
@@ -446,6 +439,22 @@
         display: inline-block!important;
         height: auto!important;
         max-width: 100%!important;
+    }
+
+
+    /*文章不存在显示的图形*/
+    #Complete {
+        fill: none;
+        stroke: #C4D4D9;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    #Sails {
+        fill: rgba(33,31,36,0.6);
+    }
+    #Smoke1, #Smoke2 {
+        opacity: 0;
     }
 
 </style>

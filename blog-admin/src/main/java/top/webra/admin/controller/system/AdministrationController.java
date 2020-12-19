@@ -202,21 +202,19 @@ public class AdministrationController {
         }
         return costomResponse;
     }
-//      失效
-//    /**
-//     * 必须提供名称和地址
-//     * @param menu
-//     * @return
-//     */
-//    @ResponseBody
-//    @PostMapping("/menu/add")
-//    public CostomResponse addMenu(Menu menu){
-//        System.out.println(menu);
-//        menuService.insertMenu(menu);
-//        costomResponse.setCode(200);
-//        costomResponse.setMes("添加成功");
-//        return costomResponse;
-//    }
+    /**
+     * 必须提供名称和地址，用作分类、标签、页面 添加到菜单中的接口
+     * @param menu
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/menu/add")
+    public CostomResponse addMenu(Menu menu){
+        menuService.insertMenu(menu);
+        costomResponse.setCode(200);
+        costomResponse.setMes("添加成功");
+        return costomResponse;
+    }
 
     // 删除菜单
     @ResponseBody

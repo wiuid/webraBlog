@@ -27,6 +27,11 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
+    public Integer delCommentByArticleId(Integer articleId) {
+        return commentsMapper.delCommentByArticleId(articleId);
+    }
+
+    @Override
     public Integer delCommentList(List<Integer> ids) {
         return commentsMapper.delCommentList(ids);
     }

@@ -42,6 +42,8 @@ public class ArticleController {
     @Autowired
     private CostomResponse costomResponse;
     @Autowired
+    private CommentsServiceImpl commentsService;
+    @Autowired
     private ArticleLabelServiceImpl articleLabelService;
     @Autowired
     private ClassificationServiceImpl classificationService;
@@ -65,7 +67,7 @@ public class ArticleController {
 
 
     /**
-     * 根据条件查询文章，可见可为null
+     * 根据条件查询文章，参数可为null
      * @param title
      * @param state
      * @param classifyId
@@ -84,10 +86,9 @@ public class ArticleController {
         List<Article> articles = articleService.queArticleSearch(title, state, classifyId);
         PageInfo<Article> articlePageInfo = new PageInfo<>(articles);
         int count = articlePageInfo.getPages();
-        count = count==0?1:count;
         model.addAttribute("articles",articles);
         model.addAttribute("curr",curr);
-        model.addAttribute("count",count);
+        model.addAttribute("count",count = count==0?1:count);
         model.addAttribute("title",title);
         model.addAttribute("state",state);
         model.addAttribute("classifyId",classifyId);
@@ -103,9 +104,15 @@ public class ArticleController {
     @ResponseBody
     @PostMapping("/delete")
     public CostomResponse delArticle(Integer articleId){
+        // 删除该文章所拥有的标签
         articleLabelService.delArticleLabelByArticleId(articleId);
+        // 根据id获得该文章
         Article article = articleService.queArticleById(articleId);
+        // 删除该文章的评论
+        commentsService.delCommentByArticleId(articleId);
+        // 删除文章
         articleService.delArticle(articleId);
+        // 返回结果
         costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
         costomResponse.setMes(MesConstant.DELETE_SUCCESS);
         recordService.insertRecord(new Record("文章管理","删除文章："+article.getTitle()));
@@ -126,7 +133,7 @@ public class ArticleController {
     @RequestMapping(value = "/edit",method = RequestMethod.GET)
     public String edit(Model model){
         Article article = new Article();
-        article.setCoverMap("/static/imgs/placeholder.jpg");
+        article.setCoverMap("/static/images/system/placeholder.jpg");
         List<Label> labels = labelService.queLabelAll();
         List<Classification> classifications = classificationService.queClassificationAll();
 
@@ -149,7 +156,7 @@ public class ArticleController {
 
         // 重写和新建文章共通的部分
         if (null == article.getCoverMap() || article.getCoverMap().equals("/static/imgs/placeholder.jpg")){
-            article.setCoverMap("https://i.postimg.cc/zvy3k7cJ/202.jpg");
+            article.setCoverMap("/static/images/rotograms/rotograms02.png");
         }
         // 编辑文章更新
         if (!article.getId().equals(0)){
@@ -251,27 +258,20 @@ public class ArticleController {
         String fileNameOld =file.getOriginalFilename();
         // 后缀名
         String suffixName = fileNameOld.substring(fileNameOld.lastIndexOf(".") + 1);
-        // 以 uuid 为新文件命名
-
-        String fileMd5 = Md5.md5(file.getBytes());
+        String fileMd5 = "f+"+Md5.md5(file.getBytes());
 
         FileHash fileHash = fileHashService.queFileHashByFileHash(fileMd5);
         if (fileHash==null){
             String fileName = fileMd5 + "." + suffixName;
-            File lin = new File(imagePath +  fileName);
             File dest = new File(imagePath + fileName);
 
-            if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();
-            }
-
             try {
-                file.transferTo(lin);
+                file.transferTo(dest);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
-                BufferedImage image = ImageIO.read(lin);
+                BufferedImage image = ImageIO.read(dest);
                 int width = image.getWidth();
                 int height =image.getHeight();
                 double proportion = (double)width /height;
@@ -308,7 +308,6 @@ public class ArticleController {
                 data.put("code",ResponseStateConstant.RESPONSE_FAILURE.toString());
                 data.put("location","一层--后端图片存储出错!请管理员检查");
             }
-            lin.delete();
 
             String json = JSON.toJSONString(data);
             return json;

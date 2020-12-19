@@ -41,7 +41,7 @@ public class DateUtil {
         long time = createTime.getTime();
         Date date = new Date();
         long time1 = date.getTime();
-        long day = (time1 - time) / 1000 / (60 * 60 * 24);
+        long day = (time1 - time) / 1000 / (60 * 60 * 24)+1;
         return day;
     }
 
