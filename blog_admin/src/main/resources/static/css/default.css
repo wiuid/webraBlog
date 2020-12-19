@@ -1,0 +1,165 @@
+
+*{
+    margin: 0;
+    padding: 0;
+}
+/*网页背景图*/
+html,body{
+    /* 加载背景图片 */
+    background: #F7F7F7;
+    height: 100%;
+}
+
+#container{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main{
+    flex: 1 0 auto;
+}
+.bg{
+    min-height:100%;
+}
+.footer{
+    flex: 0 0 auto;
+    height:100px;
+}
+
+
+/*body {*/
+/*    margin-bottom: 200px;*/
+/*}*/
+
+/*a标签去除所有样式*/
+.un,.un:link,.un:visited,.un:hover,.un:active{
+    text-decoration: none;
+    color:inherit;
+}
+/*鼠标悬浮 字体变红*/
+.font-red:hover{
+    color:red;
+}
+
+table tr th a{
+    font-size: 15px;
+    color: #3c3c3c;
+}
+
+::-webkit-scrollbar{
+    width: 7px;/* 纵向滚动条*/
+    height: 5px;/* 横向滚动条 */
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+/*定义滚动条轨道 内阴影*/
+::-webkit-scrollbar-track{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    background-color: #fff;
+}
+
+/*定义滑块 内阴影*/
+::-webkit-scrollbar-thumb{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    background-color: #D5D5D5;
+}
+
+/*图片自适应*/
+.img-responsive {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+/*p {*/
+/*    text-indent:2em;    !*每个P段落，首行空出1个空格，即缩进1个字符*!*/
+/*}*/
+
+/*阴影效果*/
+.box-shadow {
+    box-shadow: 1px 5px 20px #c1c1c1;
+}
+
+/*小屏  导航栏 下拉背景色*/
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+    background: #ffffff;
+}
+
+/*鼠标悬浮 导航栏  下拉菜单出现*/
+.navbar .nav > li:hover .dropdown-menu {
+    display: block;
+}
+.spanHiddenArchive,
+.spanHidden {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.spanHiddenArchive {
+    -webkit-line-clamp: 1!important;
+}
+
+/*按钮样式*/
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+    outline: none;
+    border-color: transparent; // 若是本身具有 border 请删除此属性
+box-shadow:none;
+}
+
+/*手机样式下拉菜单样式*/
+.dropdown-menu{
+    min-width: auto!important;
+    /*width: auto !important;*/
+}
+.navbar-fixed-bottom .navbar-collapse, .navbar-fixed-top .navbar-collapse{
+    max-height: none;
+}
+.panel-default>.panel-heading{
+    background-color: #F7F7F7!important;
+}
+.panel-group .panel-heading+.panel-collapse>.list-group, .panel-group .panel-heading+.panel-collapse>.panel-body{
+    border-top: none;
+    margin-left: 10px;
+}
+.panel {
+    background-color:  #ffffff!important;;
+    border: 0!important;
+    box-shadow:0 0 0 !important;
+}
+.panel-heading{
+    padding: 20px 0 0 15px!important;
+}
+.panel-body{
+    padding:0 0 0 15px!important;
+}
+/*导航栏样式*/
+.container-fluid{
+    padding-left: 0!important;
+    padding-right: 0!important;
+}
+.container-fluid>.navbar-collapse, .container-fluid>.navbar-header, .container>.navbar-collapse, .container>.navbar-header{
+    margin-left: 0!important;
+    padding-left: 20px!important;
+    background-color: #ffffff!important;
+}
+
+/*a标签不可操作*/
+.Inoperable{
+    pointer-events: none;
+    color: #b1b1b1
+}
+
+
+.mar50>div{
+    margin: 5px 0;
+}

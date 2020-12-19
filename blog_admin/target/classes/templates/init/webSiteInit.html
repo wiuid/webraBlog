@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>初始化-站点</title>
+    <script src="../../static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../../static/css/default.css">
+    <link rel="stylesheet" href="../../static/css/bootstrap.css">
+</head>
+<body>
+
+<div class="kuang box-shadow">
+    <div style="margin: 20px 0 10px 30px">
+        <span>
+            <h4>
+                3/3-站点信息初始化<small>(可不填写直接提交)</small>
+            </h4>
+        </span>
+    </div>
+    <hr style="border: 0 ;background: #cdcdcd;height: 2px;margin-bottom: 20px"/>
+    <div style="padding: 10px 0 0 30px" >
+        <span>站点名称: </span><input class="enjoy-css" type="text" placeholder="siteName" name="siteName">
+        <br>
+        <span>站点地址: </span><input class="enjoy-css"  type="text" placeholder="siteAddress" name="siteAddress">
+        <br>
+    </div>
+    <div class="row" style="margin-bottom: 20px">
+        <div class="col-sm-6 col-xs-6">
+            <div class="imgs" onclick="document.getElementById('file0').click()" title="Favicon 建议 32*32 以上的方形透明图标">选择Favicon</div>
+            <input id="file0"  type="file" class="img"  accept="image/vnd.microsoft.icon, image/png, image/jpeg, image/jpg" onchange="changepic('file0','show0')" style="height: 0;width: 0"/>
+        </div>
+        <div class="col-sm-6 col-xs-6">
+            <img  id="show0"  src="../../static/imgs/logo-collapsed@2x.png" style="height: 50px;width: 50px">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-xs-6">
+            <div class="imgs" onclick="document.getElementById('file1').click()" title="Logo 建议 40x40 以上的方形透明图标">选择Logo</div>
+            <input id="file1"  type="file" class="img"  accept="image/png, image/jpeg, image/jpg" onchange="changepic('file1','show1')" style="height: 0;width: 0"/>
+        </div>
+        <div class="col-sm-6 col-xs-6">
+            <img  id="show1"  src="../../static/imgs/logo-collapsed@2x.png" style="height: 50px;width: 50px">
+        </div>
+    </div>
+
+    <div class="row" style="padding:10px 0 0 20px">
+        <div style="text-align: center">
+
+        </div>
+
+        <br>
+    </div>
+    <div style="float: right;margin-right: 30px">
+        <button type="submit" class="btn btn-info">完 成</button>
+    </div>
+</div>
+
+</body>
+<script>
+
+    function changepic(file,imgs) {
+        var reads= new FileReader();
+        f=document.getElementById(file).files[0];
+        reads.readAsDataURL(f);
+        reads.onload=function (e) {
+            document.getElementById(imgs).src=this.result;
+        };
+    }
+
+
+
+</script>
+<style>
+    .kuang {
+        min-height: 450px;
+        min-width: 400px;
+        background: #ffffff;
+        position: absolute;
+        border-radius: 25px;
+        left:50%;
+        top:40%;
+        transform: translate(-50%, -50%);
+        /*text-align: right;*/
+    }
+    .enjoy-css {
+        width: 220px;
+        display: inline-block;
+        box-sizing: content-box;
+        padding: 10px 20px;
+        border: 1px solid rgba(183,183,183,1);
+        border-radius: 5px;
+        background: rgba(252,252,252,1);
+        box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) inset;
+        margin-bottom: 20px;
+    }
+
+    .img{
+        opacity:0;
+    }
+    .imgs{
+        margin: 10px 0 0 30px;
+        width: 100px;
+        border:1px solid #78C3F3;
+        background: #AADFFD;
+        color: #1E88C7;
+        border-radius: 4px;
+        /*text-align:center;*/
+        cursor: pointer;
+        padding:10px;
+    }
+
+</style>
+</html>

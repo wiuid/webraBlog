@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>页面编辑</title>
+    <link rel="shortcut icon" href="/static/images/fav/sysFav.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/loading.js"></script>
+    <link rel="stylesheet" href="/static/toastr/toastr.css"/>
+    <script src="/static/toastr/toastr.min.js"></script>
+    <script src="/static/tinymce/tinymce.min.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main">
+        <div id="bg">
+            <!--导航栏-->
+            <div th:replace="/system/common/nav :: nav"></div>
+            <div style="margin-top: 60px">
+                <ol class="breadcrumb" style="background: #ffffff;">
+                    <li><a href="/system/dashboard">仪表</a></li>
+                    <li class="active">编辑页面</li>
+                </ol>
+            </div>
+            <!--主体-->
+            <div class="row" style="background: #ffffff;border-radius: 5px;margin: 20px 0px">
+                <input th:value="${page.name}"
+                       th:name="${page.id}"
+                       id="title"
+                       type="text"
+                       class="form-control"
+                       placeholder="输入页面名称...   请勿与其他页面别称相同..."
+                       style="width: 100%">
+            </div>
+            <div class="row" style="margin: 0 0 60px 0;border-radius: 5px">
+                <textarea th:text="${page.text}" id="mytextarea" ></textarea>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom box-shadow text-right" style="background: #ffffff;padding:5px 100px 0 0">
+        <div class="container">
+            <input class="btn btn-info" onclick="save()" type="button" value="发布">
+        </div>
+    </nav>
+
+    <!--尾部版权栏-->
+    <div th:replace="/system/common/nav-tail :: nav-tail">
+    </div>
+</div>
+</body>
+<script>
+    loadNav();
+
+    function loadNav(){
+        $('#nav-sys').load('/system/nav');
+    }
+
+    // 富文本初始化
+    tinymce.init({
+        menubar:false,
+        selector: '#mytextarea',
+        language:'zh_CN',
+        branding: false,
+        autoScroll: true,
+        plugins: 'link lists preview wordcount autolink hr indent2em autoresize fullscreen',
+        toolbar: 'formatselect fontsizeselect | forecolor backcolor bold italic underline link hr| alignleft aligncenter alignright indent2em  lineheight | bullist numlist blockquote preview fullscreen',
+        min_height: 640,
+    });
+
+    function save(){
+        let id = $("#title").attr("name")
+        let name = $("#title").val()
+        let text = tinyMCE.activeEditor.getContent()
+        if (id===0){
+            form.append("nickname",name)
+        }
+        let form = new FormData
+        form.append("id",id)
+        form.append("name",name)
+        form.append("text",text)
+        $.ajax({
+            url: "/system/page/edit/save",
+            type: "post",
+            data: form,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (data){
+                if (data.code === 200){
+                    toastr.success(data.mes)
+                    setTimeout(function (){
+                        location.href="/system/page"
+                    },2000)
+                }else {
+                    toastr.warning(data.mes,"警告:")
+                }
+            }
+        })
+    }
+</script>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>nav</title>
+</head>
+<body>
+<div id="nav-sys"  th:fragment="nav">
+    <div  class="navbar navbar-default navbar-fixed-top " style="background: #ffffff" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header" style="margin-left: 20px">
+
+                <!--logo-->
+                <a href="/system/dashboard" class="navbar-brand visible-md visible-lg">
+                    Blog_System
+                </a>
+                <!--小屏时  导航栏的缩放 的 按钮 -->
+                <button type="button" class="navbar-toggle" style="float: left" data-toggle="collapse" data-target="#example-navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+            </div>
+            <!--导航栏主体-->
+            <div class="collapse navbar-collapse" id="example-navbar-collapse">
+                <ul class="nav navbar-nav" style="margin-left: 2%">
+                    <li>
+                        <a href="/system/dashboard">
+                            <i class="glyphicon glyphicon-dashboard"></i>
+                            仪表
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-edit"></i>
+                            <span class="dropdown">
+                                <span href="/system/dashboard" data-toggle="dropdown">
+                                    文章
+                                </span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/system/article">所有文章</a></li>
+                                    <li><a href="/system/article/edit">编写文章</a></li>
+                                    <li><a href="/system/article/classify">文章分类</a></li>
+                                    <li><a href="/system/article/label">文章标签</a></li>
+                                </ul>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-file"></i>
+                            <span class="dropdown">
+                                <span data-toggle="dropdown">
+                                    页面
+                                </span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/system/page">所有页面</a></li>
+                                    <li><a href="/system/page/edit">新建页面</a></li>
+                                </ul>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-th"></i>
+                            <span class="dropdown">
+                                <span data-toggle="dropdown">
+                                    管理
+                                </span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/system/administration/images">图片</a></li>
+                                    <li><a href="/system/administration/comments">评论</a></li>
+                                    <li><a href="/system/administration/menu">菜单</a></li>
+                                    <li><a href="/system/administration/index">首页</a></li>
+                                </ul>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-cog"></i>
+                            <span class="dropdown">
+                                <span data-toggle="dropdown">
+                                    系统
+                                </span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/system/set/setting">博客设置</a></li>
+                                    <li><a href="/system/set/tools">小工具</a></li>
+                                    <li><a href="/system/set/about">关于</a></li>
+                                </ul>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 5%">
+                    <li>
+                        <a target="_blank"  href="/">
+                            <i class="glyphicon glyphicon-link"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-bell"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img th:src="${portrait}" class="img-circle" style="width:20px;height:20px;line-height:50px!important;">
+<!--                            <img src="http://www.s3tu.com/images/2020/03/09/0053c7e15.th.jpg" class="img-circle" style="width:20px;height:20px;line-height:50px!important;">-->
+                            <ul class="dropdown-menu">
+                                <li><a href="/system/set/setting">个人资料</a></li>
+                                <li><a href="/logout">退出</a></li>
+                            </ul>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>

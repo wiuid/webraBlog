@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>nav</title>
+</head>
+<body>
+<div id="nav-index"  th:fragment="nav">
+    <div class="navbar navbar-default navbar-fixed-top " style="background: white" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header" style="margin-left: 20px">
+                <!--logo-->
+                <a href="/" class="navbar-left">
+                    <img src="/static/images/fav/logo.png" style="width: 40px;margin-top: 5px;">
+                </a>
+                <a href="/" th:text="${blogName}" class="navbar-brand" style="margin-top: 5px">
+                    Webra_Blog
+                </a>
+            </div>
+            <div class="collapse navbar-collapse " id="example-navbar-collapse">
+                <ul class="nav navbar-nav hidden-xs" style="margin-left: 2%">
+                    <li th:each="menu:${menus}" th:class="${menu.children} eq null ? '':'dropdown'">
+                        <a th:text="${menu.name}"
+                           th:href="${menu.children} eq null? ${menu.address}:'javascript:void(0)'"
+                           th:target="${menu.jump} eq '0' ? '_self':'_blank'"
+                           style="font-size: 14px;margin-top: 7px;"
+                        >首页</a>
+                        <ul th:if="${menu.children} ne null" class="dropdown-menu" role="menu">
+                            <li th:each="children:${menu.children}">
+                                <a th:text="${children.name}"
+                                   th:href="${children.address}"
+                                   th:target="${children.jump} eq '0' ? '_self':'_blank'"
+                                >所有文章</a>
+                            </li>
+                        </ul>
+
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 5%">
+                    <li class="hidden-xs">
+                        <div class="search-box active">
+                            <div class="key">
+                                <input id="search" type="text" placeholder="搜索文章...">
+                            </div>
+                            <div class="bt">
+                                <a onclick="searchArticle()" target="_blank" class="bt-a" style="cursor:pointer">
+                                    <img src="/static/fonts/search.svg" width="20"></img>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="visible-lg visible-md"><a target="_blank"  href="/system/dashboard">Admin</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!--移动端-->
+        <nav class="visible-xs" role="navigation">
+            <div id="menuToggle">
+                <input type="checkbox" />
+                <span></span>
+                <span></span>
+                <span></span>
+                <ul id="menu">
+                    <li th:each="menu:${menus}">
+                        <a th:text="${menu.name}"
+                           th:href="${menu.children} eq null? ${menu.address}:'javascript:void(0)'">Home</a>
+                        <ul th:if="${menu.children} ne null" role="menu">
+                            <li th:each="children:${menu.children}">
+                                <a th:text="${children.name}"
+                                   th:href="${children.address}"
+                                >所有文章</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="/system/dashboard">Admin
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+    </div>
+    <div style="margin-top: 70px"></div>
+    <script>
+        $("#search").keypress(function (even) {
+            if (even.which == 13) {
+                if($('#search').val() !== ''){
+                    const url = "/search/" + $('#search').val()
+                    window.open(url)
+                }
+            }
+        })
+        function searchArticle(){
+            if($('#search').val() !== ''){
+                const url = "/search/" + $('#search').val()
+                window.open(url)
+            }
+        }
+    </script>
+    <style>
+        .navbar-default .navbar-collapse, .navbar-default .navbar-form {
+            background: #ffffff!important;
+        }
+        .search-box{
+            margin-top: 8px;
+            width: 150px;
+            /*width: 40px;*/
+            height: 40px;
+            /*background-color: #e9e9e9;*/
+            background-color: #F5F5F5;
+            /*border-radius: 20px!important;*/
+            /*垂直居中,左右居左*/
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .key{
+            /*flex布局中本区域的缩放比例为1份*/
+            flex-shrink: 1;
+            flex-grow: 1;
+            background-color: #F5F5F5;
+        }
+        .key input{
+            background-color: #ffffff;
+            width: calc(100% - 1px);
+            height: 40px;
+            padding: 0 0 0 20px;
+            background: none;
+            border: none;
+            outline: none;
+        }
+        .key input:focus{
+            border: none;
+            outline: none;
+        }
+        .bt{
+            /*flsx 布局中本区域的缩放比例为0份,不缩放,保持原有*/
+            flex-shrink: 0;
+            flex-grow: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
+            /*搜索图标居中*/
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /*background-color: turquoise;*/
+        }
+        .bt a{
+            padding: 10px;
+            border-radius: 100%;
+            text-decoration: none;
+            color: #F5F5F5;
+            /*background-color: violet;*/
+        }
+        .search-box.active .bt a{
+            background-color: #F5F5F5;
+        }
+    </style>
+</div>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>文章分类</title>
+    <link rel="shortcut icon" href="/static/images/fav/sysFav.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/hover-button.css">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <link rel="stylesheet" href="/static/toastr/toastr.css"/>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/loading.js"></script>
+    <script src="/static/toastr/toastr.min.js"></script>
+    <script>
+        // 初始化弹窗样式
+        toastr.options = {
+            positionClass: "toast-top-center",
+        };
+    </script>
+</head>
+<body>
+<div id="container" class="container">
+    <div class="main">
+        <div id="bg">
+            <!--导航栏-->
+            <div th:replace="/system/common/nav :: nav"></div>
+            <div style="margin-top: 60px">
+                <ol class="breadcrumb" style="background: #ffffff;">
+                    <li><a href="/system/dashboard">仪表</a></li>
+                    <li><a href="/system/article">所有文章</a></li>
+                    <li class="active">文章分类</li>
+                </ol>
+            </div>
+            <!--主体-->
+            <div class="row">
+                <!--最新文章-->
+                <div class="col-md-5 col-sm-12" style="margin-bottom: 20px">
+                    <div style="background: #ffffff;margin:0;padding:20px">
+                        <div class="row" style="margin: 0 ">
+                            <span style="font-size: 15px;padding:0 20px">
+                                添加分类
+                            </span>
+                            <hr/>
+                        </div>
+                        <div class="row" style="margin:0;padding: 0 20px">
+                            <div class="row" style=";margin: 5px 0">
+                                <div class="row">分类名称</div>
+                                <div class="row"><input name="0" type="text" class="form-control" id="classifyName" placeholder="分类名称..."></div>
+                            </div>
+                            <div class="row" style=";margin: 5px 0">
+                                <div class="row">分类别称</div>
+                                <div class="row"><input type="text" class="form-control" id="classifyNickname" placeholder="用于地址链接,最好英文..."></div>
+                            </div>
+                            <div class="row" style=";margin: 5px 0">
+                                <div class="row">描述</div>
+                                <div class="row"><textarea class="form-control"  id="classifyRemarks" placeholder="添加描述信息..."  rows="3" style="resize: none"></textarea></div>
+                            </div>
+                        </div>
+                        <div class="row" style=";margin:0;padding: 0 20px">
+                            <input id="save" onclick="subClassify()" type="button" class="btn btn-info" value="提 交">
+                            <input id="re" onclick="ret()" type="button" style="display: none" class="btn btn-default" value="返回新建">
+                        </div>
+                    </div>
+                </div>
+                <!--操作记录-->
+                <div class="col-md-7 col-sm-12" style="margin-bottom: 20px">
+                    <div style="background: #ffffff;padding: 20px">
+                        <div class="row">
+                            <span style="padding-left: 20px;font-size: 15px">
+                                分类列表
+                            </span>
+                            <hr/>
+                        </div>
+                        <div class="row" style="padding: 0px 20px">
+                            <table id="getClassify" th:fragment="getClassify" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <td style="display: none">id</td>
+                                    <td>名称</td>
+                                    <td>描述</td>
+                                    <td>文章数</td>
+                                    <td>操作</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="classification:${classifications}">
+                                    <td  style="display: none"><span th:name="${classification.nickname}" th:text="${classification.id}"></span>
+                                    <td><span th:text="${classification.name}"></span></td>
+                                    <td><span th:text="${classification.remarks}"></span></td>
+                                    <td><span class="badge span-access" th:text="${classification.articleTotal}">23</span></td>
+                                    <td><a onclick="editClassify(this)" href="javascript:;">编辑</a>
+                                        |<a onclick="toMenu(this)" href="javascript:;">菜单</a>
+                                        |<a href="javascript:;"
+                                           title="确认删除?"
+                                           data-toggle="popover"
+                                           data-html="true"
+                                           data-trigger="focus"
+                                           data-content="
+                                       <a class='btn btn-info btn-xs' >点错了</a>
+                                       <a  onclick='recoveryClassify(this)' class='btn btn-danger btn-xs' >确认</a>
+                                   ">✖</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <script>
+                                    $(function () {
+                                        $('[data-toggle="popover"]').popover()
+                                    })
+                                </script>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!--尾部版权栏-->
+    <div th:replace="/system/common/nav-tail :: nav-tail">
+    </div>
+</div>
+
+
+</body>
+<script>
+    loadNav();
+    loadClassify()
+
+
+    function loadNav(){
+        $('#nav-sys').load('/system/nav');
+    }
+    function loadClassify(){
+        $('#getClassify').load('/system/article/classify/query');
+    }
+
+
+    function editClassify(obj){
+        let id =  $(obj).parent().parent().find("span:eq(0)").text()
+        let nickname =  $(obj).parent().parent().find("span:eq(0)").attr("name")
+        let name =  $(obj).parent().parent().find("span:eq(1)").text()
+        let remarks =  $(obj).parent().parent().find("span:eq(2)").text()
+
+        $("#classifyName").attr("name",id)
+        $("#classifyName").val(name)
+        $("#classifyNickname").val(nickname)
+        $("#classifyRemarks").val(remarks)
+
+        $("#save").attr("value","更 新")
+        $("#re").css("display","inline")
+    }
+
+    function ret(){
+        $("#classifyName").attr("name",0)
+        $("#classifyName").val("")
+        $("#classifyNickname").val("")
+        $("#classifyRemarks").val("")
+
+        $("#save").attr("value","提 交")
+        $("#re").css("display","none")
+    }
+
+    function subClassify(){
+        let id = $("#classifyName").attr("name")
+        let name = $("#classifyName").val()
+        let nickname = $("#classifyNickname").val()
+        let remarks = $("#classifyRemarks").val()
+        let form = new FormData
+        form.append("id",id)
+        form.append("name",name)
+        form.append("nickname",nickname)
+        form.append("remarks",remarks)
+
+        let url = '/system/article/classify/update'
+        $.ajax({
+            url: url,
+            data: form,
+            type: 'post',
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (data){
+                if (data.code === 200){
+                    toastr.success(data.mes)
+                    loadClassify()
+                    ret()
+                }
+            }
+        })
+    }
+
+    function toMenu(obj){
+        let classifyName = $(obj).parent().parent().find("span:eq(1)").text()
+        let classifyAddress = '/classify/' + $(obj).parent().parent().find("span:eq(0)").attr("name")
+        let url = "/system/administration/menu/add"
+        let form = new FormData
+        form.append("name",classifyName)
+        form.append("address",classifyAddress)
+        $.ajax({
+            url: url,
+            data: form,
+            type: 'post',
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (data){
+                toastr.success(data.mes)
+                loadClassify()
+            }
+        })
+
+    }
+
+    function recoveryClassify(obj){
+        let classifyId = $(obj).parent().parent().parent().parent().children('td').eq(0).text();
+        let url = "/system/article/classify/delete"
+        let form = new FormData
+        form.append("classifyId",classifyId)
+        $.ajax({
+            url: url,
+            type: 'post',
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            data: form,
+            success: function (data){
+                if (data.code
+                    === 200){
+                    toastr.success(data.mes)
+                    loadClassify()
+                }
+            }
+        })
+    }
+
+</script>
+<style>
+    table tbody tr,
+    table thead tr {
+        height: 60px;
+    }
+    table tbody tr td,
+    table thead tr td {
+        align-content: center;
+    }
+
+    #class td /*设置表格文字左右和上下居中对齐*/
+    {
+        display:table-cell;
+        vertical-align:middle;
+    }
+    /* 表格中的文章分类那一列的样式 */
+    .span-categories{
+        color: #00aeff;
+        background: rgba(24,144,255,0.2);
+        border-radius: 5px;
+        padding: 2px 5px;
+        border: 1px solid rgba(24,144,255,0.3);
+    }
+    .span-comment,
+    .span-access {
+        color: #ffffff;
+        padding: 5px;
+    }
+    .span-comment {
+        background: #ec5d5a;
+    }
+    .span-access {
+        background: #27efff;
+    }
+</style>
+</html>
