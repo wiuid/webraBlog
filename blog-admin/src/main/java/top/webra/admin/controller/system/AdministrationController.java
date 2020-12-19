@@ -286,30 +286,30 @@ public class AdministrationController {
     public CostomResponse addRotograms(boolean add,Integer articleId){
         Article article = articleService.queArticleById(articleId);
         if (article == null){
-            costomResponse.setCode(611);
+            costomResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
             costomResponse.setMes("非法请求!!");
         }else if (add){
             // 判断轮播图个数
             Integer integer = articleService.queArticleRotogramsTotal();
             if (integer >= 5){
-                costomResponse.setCode(603);
+                costomResponse.setCode(ResponseStateConstant.DATA_EXCESSIVE);
                 costomResponse.setMes("轮播图已达五个,若再添加,请酌情删除");
             }else{
                 if ("发表".equals(article.getState())) {
                     article.setRotograms(1);
                     articleService.updArticle(article);
-                    costomResponse.setCode(200);
+                    costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
                     costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
                     recordService.insertRecord(new Record("轮播图管理","文章："+ article.getTitle() +"添加到轮播图中"));
                 }else{
-                    costomResponse.setCode(611);
+                    costomResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
                     costomResponse.setMes("请在网页进行操作,请勿非法操作做");
                 }
             }
         }else {
             article.setRotograms(2);
             articleService.updArticle(article);
-            costomResponse.setCode(200);
+            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
             costomResponse.setMes(article.getTitle() + " 从轮播图中删除");
             recordService.insertRecord(new Record("轮播图管理","文章："+ article.getTitle() +"从轮播图中删除"));
         }

@@ -88,9 +88,9 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> getRotograms() {
         ArrayList<Article> articles = new ArrayList<>();
         String[] strings = new String[3];
-        strings[0] = "/static/imgs/rotograms/rotograms01.png";
-        strings[1] = "/static/imgs/rotograms/rotograms02.png";
-        strings[2] = "/static/imgs/rotograms/rotograms03.png";
+        strings[0] = "/static/images/rotograms/rotograms01.png";
+        strings[1] = "/static/images/rotograms/rotograms02.png";
+        strings[2] = "/static/images/rotograms/rotograms03.png";
         int coun = 0;
         for (String string : strings) {
             Article article = new Article();

@@ -170,7 +170,6 @@ public class IndexController {
     public String articleComments(@PathVariable Integer articleId,HttpSession session,Model model){
         // log.info("进入了获取评论的方法");
         List<Comments> comments = commentsService.queCommentsByArticleId(articleId);
-        System.out.println(JSON.toJSONString(comments));
         // log.info("获取到的comments数据:" + comments);
         // 提取的评论处理之后返回给model
         if (comments.isEmpty()){
