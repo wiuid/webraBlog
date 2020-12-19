@@ -64,7 +64,6 @@ public class DashboardController {
     public String getComments(Model model){
         PageHelper.startPage(1,5);
         List<Comments> comments = commentsService.queCommentsByUserArticleId(null, null);
-        System.out.println(comments);
         model.addAttribute("comments",comments);
         return "system/dashboard/dashboard::comments";
     }
@@ -75,8 +74,6 @@ public class DashboardController {
         PageHelper.startPage(1,5);
         List<Record> records = recordService.queRecordAll();
         model.addAttribute("records",records);
-
-        System.out.println("执行者..................");
 
         PageHelper.startPage(curr,20);
         List<Record> recordsAll = recordService.queRecordAll();

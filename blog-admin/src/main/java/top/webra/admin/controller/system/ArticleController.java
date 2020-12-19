@@ -176,7 +176,6 @@ public class ArticleController {
             Object webraId = session.getAttribute("webraId");
             Integer integer = Integer.valueOf(webraId.toString());
             article.setUserId(integer);
-            System.out.println(article);
             articleService.insertArticle(article);
             if (labelIds.size()>0){
                 for (Integer labelId : labelIds){
@@ -336,7 +335,6 @@ public class ArticleController {
     @ResponseBody
     @PostMapping("/classify/update")
     public CostomResponse updateClassify(Classification classification){
-        System.out.println(classification);
 
         if (classification.getId().equals(0)){
             classificationService.insertClassification(classification);

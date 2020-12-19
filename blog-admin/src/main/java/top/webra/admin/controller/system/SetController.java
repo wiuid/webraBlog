@@ -140,7 +140,6 @@ public class SetController {
     @ResponseBody
     @PostMapping("/setting/article/update")
     public CostomResponse updateArticleInfo(Set set){
-        System.out.println(set);
         Integer integer = setService.updSet(set);
         if (integer.equals(1)){
             costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);

@@ -27,7 +27,6 @@ public class InitController {
     @GetMapping
     public String init(){
         User user = userService.queUserById(1);
-        System.out.println(user.getCreateTime().getTime());
         if (user.getCreateTime().getTime() == 1577808000000L){
             return "init/userInit";
         }
@@ -37,7 +36,6 @@ public class InitController {
     @ResponseBody
     @PostMapping
     public CostomResponse init(User user){
-        System.out.println(user);
         User userInit = userService.queUserById(1);
         if (userInit.getCreateTime().getTime() == 1577808000000L){
             // 执行更新

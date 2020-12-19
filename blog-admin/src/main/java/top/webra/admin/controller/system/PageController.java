@@ -71,7 +71,6 @@ public class PageController {
     @ResponseBody
     @PostMapping("/set")
     public CostomResponse saveSet(Page page){
-        System.out.println(page);
         if (page == null){
             costomResponse.setCode(611);
             costomResponse.setMes("请求内容异常");
@@ -104,7 +103,6 @@ public class PageController {
     @ResponseBody
     @PostMapping("/edit/save")
     public CostomResponse editSave(Page page){
-        System.out.println(page);
         if (page.getId().equals(0)){
             pageService.insertPage(page);
             costomResponse.setCode(200);

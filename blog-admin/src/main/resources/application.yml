@@ -24,7 +24,7 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai
   resources:
-    static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, classpath:/public/, file:${upload.image.path}
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, classpath:/public/
   # 上传文件大小限制
   servlet:
     multipart:
@@ -43,20 +43,6 @@ mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-#pagehelper:
-#  helper-dialect: mysql
-
-# 图片存放路径
-upload:
-  image:
-    path: E:\Code\webra-blog\imgs
-
-#  # 热启动
-#  devtools:
-#    restart:
-#      enabled: false #设置开启热部署
-#      additional-paths: src/main/java #重启目录
 
 
 

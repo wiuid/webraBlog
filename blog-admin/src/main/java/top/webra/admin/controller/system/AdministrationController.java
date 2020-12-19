@@ -223,17 +223,12 @@ public class AdministrationController {
         Menu menu1 = menuService.queMenuById(menuId);
         if (superId.equals(0)) {
             List<Menu> menus = menuService.queMenuBySuperId(menuId);
-            for (Menu menu : menus) {
-                System.out.println(menu.getName());
-            }
             if (!menus.isEmpty()) {
                 ArrayList<Integer> integers = new ArrayList<>();
                 for (Menu menu : menus) {
-                    System.out.println(menu.getId() + menu.getName());
                     integers.add(menu.getId());
                 }
                 Integer integer = menuService.updMenuSuperIdByIds(integers);
-                System.out.println(integer);
                 recordService.insertRecord(new Record("菜单管理","删除一级菜单："+menu1.getName()));
                 costomResponse.setMes("删除一级菜单成功,二级菜单自动变更为一级菜单");
             }
