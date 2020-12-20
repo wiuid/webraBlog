@@ -7,9 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.qiniu.util.Md5;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
@@ -18,11 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import top.webra.constants.MesConstant;
 import top.webra.constants.ResponseStateConstant;
 import top.webra.pojo.*;
-import top.webra.service.ClassificationService;
 import top.webra.service.impl.*;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -40,7 +36,7 @@ public class ArticleController {
     @Autowired
     private ArticleServiceImpl articleService;
     @Autowired
-    private CostomResponse costomResponse;
+    private CustomResponse customResponse;
     @Autowired
     private CommentsServiceImpl commentsService;
     @Autowired
@@ -103,7 +99,7 @@ public class ArticleController {
      */
     @ResponseBody
     @PostMapping("/delete")
-    public CostomResponse delArticle(Integer articleId){
+    public CustomResponse delArticle(Integer articleId){
         // 删除该文章所拥有的标签
         articleLabelService.delArticleLabelByArticleId(articleId);
         // 根据id获得该文章
@@ -113,19 +109,19 @@ public class ArticleController {
         // 删除文章
         articleService.delArticle(articleId);
         // 返回结果
-        costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-        costomResponse.setMes(MesConstant.DELETE_SUCCESS);
+        customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+        customResponse.setMes(MesConstant.DELETE_SUCCESS);
         recordService.insertRecord(new Record("文章管理","删除文章："+article.getTitle()));
-        return costomResponse;
+        return customResponse;
     }
     @ResponseBody
     @PostMapping("/update")
-    public CostomResponse updateArticle(Article article){
+    public CustomResponse updateArticle(Article article){
         articleService.updArticle(article);
-        costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-        costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+        customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+        customResponse.setMes(MesConstant.UPDATE_SUCCESS);
         recordService.insertRecord(new Record("文章管理","更新文章："+article.getTitle()));
-        return costomResponse;
+        return customResponse;
     }
 
 
@@ -149,7 +145,7 @@ public class ArticleController {
     // 发布文章
     @ResponseBody
     @PostMapping("/edit/release")
-    public CostomResponse releaseArticle(Article article,@RequestParam(required = false)List<Object> labelArray,HttpSession session){
+    public CustomResponse releaseArticle(Article article, @RequestParam(required = false)List<Object> labelArray, HttpSession session){
 
         // 对传入参数  labelArray   进行检查
         List<Integer> labelIds = labelService.inspectionLabelObject(labelArray);
@@ -167,10 +163,10 @@ public class ArticleController {
                     articleLabelService.insertArticleLabel(article.getId(),labelId);
                 }
             }
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
             recordService.insertRecord(new Record("文章管理","更新文章："+article.getTitle()));
-            return costomResponse;
+            return customResponse;
         }else{
             //编辑文章新发布
             Object webraId = session.getAttribute("webraId");
@@ -183,10 +179,10 @@ public class ArticleController {
                 }
             }
 
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-            costomResponse.setMes(MesConstant.RELEASE_SUCCESS);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes(MesConstant.RELEASE_SUCCESS);
             recordService.insertRecord(new Record("文章管理","发布文章："+article.getTitle()));
-            return costomResponse;
+            return customResponse;
         }
     }
     // 文章改写
@@ -334,24 +330,24 @@ public class ArticleController {
     }
     @ResponseBody
     @PostMapping("/classify/update")
-    public CostomResponse updateClassify(Classification classification){
+    public CustomResponse updateClassify(Classification classification){
 
         if (classification.getId().equals(0)){
             classificationService.insertClassification(classification);
-            costomResponse.setMes(MesConstant.CREATE_SUCCESS);
+            customResponse.setMes(MesConstant.CREATE_SUCCESS);
             recordService.insertRecord(new Record("分类管理","添加分类："+classification.getName()));
         }else {
             classificationService.updClassification(classification);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
             recordService.insertRecord(new Record("分类管理","更新分类："+classification.getName()));
         }
-        costomResponse.setCode(200);
-        return costomResponse;
+        customResponse.setCode(200);
+        return customResponse;
     }
 
     @ResponseBody
     @PostMapping("/classify/delete")
-    public CostomResponse delClassify(Integer classifyId){
+    public CustomResponse delClassify(Integer classifyId){
         List<Article> articles = articleService.queArticleSearch(null, null, classifyId);
         if (!articles.isEmpty()){
             for (Article article : articles) {
@@ -361,11 +357,11 @@ public class ArticleController {
         }
         Classification classification = classificationService.queClassificationById(classifyId);
         classificationService.delClassification(classifyId);
-        costomResponse.setCode(200);
-        costomResponse.setMes("删除成功");
+        customResponse.setCode(200);
+        customResponse.setMes("删除成功");
         recordService.insertRecord(new Record("分类管理","删除分类："+classification.getName()));
 
-        return costomResponse;
+        return customResponse;
     }
 
     ////////////////////////////----- 标签 -----////////////////////////////
@@ -382,23 +378,23 @@ public class ArticleController {
 
     @ResponseBody
     @PostMapping("/label/update")
-    public CostomResponse updateLabel(Label label){
+    public CustomResponse updateLabel(Label label){
         if (label.getId().equals(0)) {
             labelService.insertLabel(label);
-            costomResponse.setMes(MesConstant.CREATE_SUCCESS);
+            customResponse.setMes(MesConstant.CREATE_SUCCESS);
             recordService.insertRecord(new Record("标签管理","添加标签："+label.getName()));
         }else {
             labelService.updLabel(label);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
             recordService.insertRecord(new Record("标签管理","更新标签："+label.getName()));
         }
-        costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-        return costomResponse;
+        customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+        return customResponse;
     }
 
     @ResponseBody
     @PostMapping("/label/delete")
-    public CostomResponse delLabel(Integer labelId){
+    public CustomResponse delLabel(Integer labelId){
         // 检查与该标签关联的文章，删除关联
         List<ArticleLabel> articleLabels = articleLabelService.queArticleLabelByLabelId(labelId);
         if (!articleLabels.isEmpty()){
@@ -406,10 +402,10 @@ public class ArticleController {
         }
         Label label = labelService.queLabelById(labelId);
         labelService.delLabel(labelId);
-        costomResponse.setMes(MesConstant.DELETE_SUCCESS);
-        costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+        customResponse.setMes(MesConstant.DELETE_SUCCESS);
+        customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
         recordService.insertRecord(new Record("标签管理","删除标签："+label.getName()));
-        return costomResponse;
+        return customResponse;
     }
 
 

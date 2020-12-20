@@ -30,7 +30,7 @@ public class AdministrationController {
     @Autowired
     private UserServiceImpl userService;
     @Autowired
-    private CostomResponse costomResponse;
+    private CustomResponse customResponse;
     @Autowired
     private MenuServiceImpl menuService;
     @Autowired
@@ -62,7 +62,7 @@ public class AdministrationController {
 
     @ResponseBody
     @PostMapping("/images/delete")
-    public CostomResponse deleteImage(String imageName){
+    public CustomResponse deleteImage(String imageName){
         String[] split = imageName.split("\\.");
         Integer integer = fileHashService.delFileHash(split[0]);
         if (integer==1){
@@ -70,13 +70,13 @@ public class AdministrationController {
             File filePath = new File(s);
             boolean delete = filePath.delete();
             recordService.insertRecord(new Record("图片操作","删除图片"));
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-            costomResponse.setMes(MesConstant.DELETE_SUCCESS);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes(MesConstant.DELETE_SUCCESS);
         }else{
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
-            costomResponse.setMes(MesConstant.DELETE_FAILURE);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+            customResponse.setMes(MesConstant.DELETE_FAILURE);
         }
-        return costomResponse;
+        return customResponse;
     }
 
     ////////////////////////////----- 评论管理 -----////////////////////////////
@@ -103,7 +103,7 @@ public class AdministrationController {
     // 查询文章
     @ResponseBody
     @GetMapping("/comments/article")
-    public CostomResponse getArticle(String title){
+    public CustomResponse getArticle(String title){
         if (null == title){
             return null;
         }
@@ -116,13 +116,13 @@ public class AdministrationController {
             log.info("搜索结果为空");
             return null;
         }
-        costomResponse.setData(articles);
-        return costomResponse;
+        customResponse.setData(articles);
+        return customResponse;
     }
     // 查询用户
     @ResponseBody
     @GetMapping("/comments/user")
-    public CostomResponse getUser(String name){
+    public CustomResponse getUser(String name){
         if (null == name){
             return null;
         }
@@ -132,13 +132,13 @@ public class AdministrationController {
         if (users.isEmpty()){
             return null;
         }
-        costomResponse.setData(users);
-        return costomResponse;
+        customResponse.setData(users);
+        return customResponse;
     }
 
     @ResponseBody
     @PostMapping("/comments/delete")
-    public CostomResponse delComments(@RequestParam Integer commentsId){
+    public CustomResponse delComments(@RequestParam Integer commentsId){
         Comments comments = commentsService.queCommentsById(commentsId);
         if (comments != null){
             // 一级评论
@@ -156,13 +156,13 @@ public class AdministrationController {
                 recordService.insertRecord(new Record("评论管理","删除二级评论"));
                 commentsService.delComment(commentsId);
             }
-            costomResponse.setCode(200);
-            costomResponse.setMes("删除成功");
+            customResponse.setCode(200);
+            customResponse.setMes("删除成功");
         }else {
-            costomResponse.setCode(602);
-            costomResponse.setMes("暂无该评论,请重新选择");
+            customResponse.setCode(602);
+            customResponse.setMes("暂无该评论,请重新选择");
         }
-        return costomResponse;
+        return customResponse;
     }
 
 
@@ -188,19 +188,19 @@ public class AdministrationController {
     // 更新/添加菜单
     @ResponseBody
     @PostMapping("/menu/update")
-    public CostomResponse updateMenu(Menu menu){
+    public CustomResponse updateMenu(Menu menu){
         if (menu.getId().equals(0)){
             menuService.insertMenu(menu);
             recordService.insertRecord(new Record("菜单管理","添加菜单："+menu.getName()));
-            costomResponse.setCode(200);
-            costomResponse.setMes("添加菜单成功!");
+            customResponse.setCode(200);
+            customResponse.setMes("添加菜单成功!");
         }else {
             menuService.updMenu(menu);
             recordService.insertRecord(new Record("菜单管理","更新菜单："+menu.getName()));
-            costomResponse.setCode(200);
-            costomResponse.setMes("更新菜单成功!");
+            customResponse.setCode(200);
+            customResponse.setMes("更新菜单成功!");
         }
-        return costomResponse;
+        return customResponse;
     }
     /**
      * 必须提供名称和地址，用作分类、标签、页面 添加到菜单中的接口
@@ -209,17 +209,17 @@ public class AdministrationController {
      */
     @ResponseBody
     @PostMapping("/menu/add")
-    public CostomResponse addMenu(Menu menu){
+    public CustomResponse addMenu(Menu menu){
         menuService.insertMenu(menu);
-        costomResponse.setCode(200);
-        costomResponse.setMes("添加成功");
-        return costomResponse;
+        customResponse.setCode(200);
+        customResponse.setMes("添加成功");
+        return customResponse;
     }
 
     // 删除菜单
     @ResponseBody
     @PostMapping("/menu/delete")
-    public CostomResponse deleteMenu(Integer menuId, Integer superId){
+    public CustomResponse deleteMenu(Integer menuId, Integer superId){
         Menu menu1 = menuService.queMenuById(menuId);
         if (superId.equals(0)) {
             List<Menu> menus = menuService.queMenuBySuperId(menuId);
@@ -230,16 +230,16 @@ public class AdministrationController {
                 }
                 Integer integer = menuService.updMenuSuperIdByIds(integers);
                 recordService.insertRecord(new Record("菜单管理","删除一级菜单："+menu1.getName()));
-                costomResponse.setMes("删除一级菜单成功,二级菜单自动变更为一级菜单");
+                customResponse.setMes("删除一级菜单成功,二级菜单自动变更为一级菜单");
             }
         }else {
             recordService.insertRecord(new Record("菜单管理","删除二级菜单："+menu1.getName()));
-            costomResponse.setMes("删除二级菜单成功");
+            customResponse.setMes("删除二级菜单成功");
         }
         menuService.delMenu(menuId);
-        costomResponse.setCode(200);
+        customResponse.setCode(200);
 
-        return costomResponse;
+        return customResponse;
     }
 
     ////////////////////////////----- 首页管理 -----////////////////////////////
@@ -276,37 +276,37 @@ public class AdministrationController {
     }
     @ResponseBody
     @PostMapping("/index/add/rotograms")
-    public CostomResponse addRotograms(boolean add,Integer articleId){
+    public CustomResponse addRotograms(boolean add, Integer articleId){
         Article article = articleService.queArticleById(articleId);
         if (article == null){
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
-            costomResponse.setMes("非法请求!!");
+            customResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
+            customResponse.setMes("非法请求!!");
         }else if (add){
             // 判断轮播图个数
             Integer integer = articleService.queArticleRotogramsTotal();
             if (integer >= 5){
-                costomResponse.setCode(ResponseStateConstant.DATA_EXCESSIVE);
-                costomResponse.setMes("轮播图已达五个,若再添加,请酌情删除");
+                customResponse.setCode(ResponseStateConstant.DATA_EXCESSIVE);
+                customResponse.setMes("轮播图已达五个,若再添加,请酌情删除");
             }else{
                 if ("发表".equals(article.getState())) {
                     article.setRotograms(1);
                     articleService.updArticle(article);
-                    costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                    costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+                    customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+                    customResponse.setMes(MesConstant.UPDATE_SUCCESS);
                     recordService.insertRecord(new Record("轮播图管理","文章："+ article.getTitle() +"添加到轮播图中"));
                 }else{
-                    costomResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
-                    costomResponse.setMes("请在网页进行操作,请勿非法操作做");
+                    customResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
+                    customResponse.setMes("请在网页进行操作,请勿非法操作做");
                 }
             }
         }else {
             article.setRotograms(2);
             articleService.updArticle(article);
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-            costomResponse.setMes(article.getTitle() + " 从轮播图中删除");
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes(article.getTitle() + " 从轮播图中删除");
             recordService.insertRecord(new Record("轮播图管理","文章："+ article.getTitle() +"从轮播图中删除"));
         }
-        return costomResponse;
+        return customResponse;
     }
 }
 

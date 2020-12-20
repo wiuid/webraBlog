@@ -8,7 +8,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.webra.constants.ResponseStateConstant;
-import top.webra.pojo.CostomResponse;
+import top.webra.pojo.CustomResponse;
 import top.webra.pojo.FileHash;
 import top.webra.pojo.Record;
 import top.webra.service.impl.FileHashServiceImpl;
@@ -26,7 +26,7 @@ import java.io.IOException;
 public class FileController {
 
     @Autowired
-    private CostomResponse costomResponse;
+    private CustomResponse customResponse;
     @Autowired
     private FileHashServiceImpl fileHashService;
     @Autowired
@@ -36,7 +36,7 @@ public class FileController {
 
     @ResponseBody
     @PostMapping("/logo/upload")
-    public CostomResponse uploadLogo(@RequestPart("file_data") MultipartFile file){
+    public CustomResponse uploadLogo(@RequestPart("file_data") MultipartFile file){
         // 获得静态资源路径
         String path = ClassUtils.getDefaultClassLoader().getResource("static/images/fav").getPath() + "/logo.png";
         File filePath = new File(path);
@@ -44,21 +44,21 @@ public class FileController {
         if (delete){
             try {
                 file.transferTo(filePath);
-                costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                costomResponse.setMes("http://localhost:8080/static/images/fav/logo.png");
+                customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+                customResponse.setMes("http://localhost:8080/static/images/fav/logo.png");
                 recordService.insertRecord(new Record("网站Logo","更新操作"));
             } catch (IOException e) {
-                costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+                customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
             }
         }else {
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
         }
 
-        return costomResponse;
+        return customResponse;
     }
     @ResponseBody
     @PostMapping("/fav/upload")
-    public CostomResponse uploadFav(@RequestPart("file_data") MultipartFile file){
+    public CustomResponse uploadFav(@RequestPart("file_data") MultipartFile file){
         // 获得静态资源路径
         String path = ClassUtils.getDefaultClassLoader().getResource("static/images/fav").getPath() + "/fav.ico";
         File filePath = new File(path);
@@ -66,22 +66,22 @@ public class FileController {
         if (delete){
             try {
                 file.transferTo(filePath);
-                costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                costomResponse.setMes("http://localhost:8080/static/images/fav/fav.ico");
+                customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+                customResponse.setMes("http://localhost:8080/static/images/fav/fav.ico");
                 recordService.insertRecord(new Record("网站Favicon","更新操作"));
             } catch (IOException e) {
-                costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+                customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
             }
         }else {
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
         }
 
-        return costomResponse;
+        return customResponse;
     }
 
     @ResponseBody
     @PostMapping("/image/upload")
-    public CostomResponse uploadImage(@RequestPart("file_data") MultipartFile file,
+    public CustomResponse uploadImage(@RequestPart("file_data") MultipartFile file,
                                       @RequestParam("fileId") String fileName){
         try {
             // 获取文件的后缀名
@@ -96,19 +96,19 @@ public class FileController {
                 File filePath = new File(imagePath+fileName);
 
                 file.transferTo(filePath);
-                costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                costomResponse.setMes("/static/images/"+fileName);
+                customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+                customResponse.setMes("/static/images/"+fileName);
                 FileHash fileHash = new FileHash(1,fileName, fileMd5);
                 fileHashService.insertFileHash(fileHash);
             }else {
-                costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                costomResponse.setMes("/static/images/"+fileHash1.getFileName());
+                customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+                customResponse.setMes("/static/images/"+fileHash1.getFileName());
             }
         } catch (IOException e) {
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
         }
 
-        return costomResponse;
+        return customResponse;
     }
 
 /** 七牛云上传实例
@@ -165,16 +165,16 @@ public class FileController {
 
     @ResponseBody
     @PostMapping("/image/delete")
-    public CostomResponse delImage(){
-        return costomResponse;
+    public CustomResponse delImage(){
+        return customResponse;
     }
 
 
     @ResponseBody
     @PostMapping("/excel/upload")
-    public CostomResponse uploadExcel(){
+    public CustomResponse uploadExcel(){
 
-        return costomResponse;
+        return customResponse;
     }
 
 }

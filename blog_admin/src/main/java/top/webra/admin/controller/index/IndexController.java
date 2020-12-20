@@ -1,12 +1,10 @@
 package top.webra.admin.controller.index;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +12,6 @@ import top.webra.constants.*;
 import top.webra.pojo.*;
 import top.webra.service.impl.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,7 @@ public class IndexController {
     private ArticleServiceImpl articleService;
 
     @Autowired
-    private CostomResponse costomResponse;
+    private CustomResponse customResponse;
 
     @Autowired
     private WebsiteServiceImpl websiteService;
@@ -216,27 +213,27 @@ public class IndexController {
      */
     @ResponseBody
     @PostMapping("/article/comment")
-    public CostomResponse articleComments(User user, Comments comments,HttpSession session){
+    public CustomResponse articleComments(User user, Comments comments, HttpSession session){
         Object webraId = session.getAttribute("webraId");
         if (webraId == null &&
                 comments.getUserId().equals(0) &&
                 RequestConstant.REQUEST_UNDEFINED.equals(user.getNickname())) {
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
-            costomResponse.setMes(MesConstant.REQUEST_PARAM_EXCEPTION);
-            return costomResponse;
+            customResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
+            customResponse.setMes(MesConstant.REQUEST_PARAM_EXCEPTION);
+            return customResponse;
         }else if(webraId == null && comments.getUserId().equals(0) && RequestConstant.REQUEST_UNDEFINED.equals(user.getEmail())){
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
-            costomResponse.setMes(MesConstant.REQUEST_PARAM_EXCEPTION);
-            return costomResponse;
+            customResponse.setCode(ResponseStateConstant.RESPONSE_EXCEPTION);
+            customResponse.setMes(MesConstant.REQUEST_PARAM_EXCEPTION);
+            return customResponse;
         }else if(comments.getUserId().equals(0)){
             if (user.getEmail().matches("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*")){
                 User user1 = userService.queUserByEmail(user.getEmail());
                 // 设置用户id 到session中
                 if (null == user1){
                     if (user.getEmail().equals(userService.queUserById(1).getEmail())){
-                        costomResponse.setCode(ResponseStateConstant.USER_EMAIL_WEBRA);
-                        costomResponse.setMes(MesConstant.EMAIL_ALREADY_EXISTS);
-                        return costomResponse;
+                        customResponse.setCode(ResponseStateConstant.USER_EMAIL_WEBRA);
+                        customResponse.setMes(MesConstant.EMAIL_ALREADY_EXISTS);
+                        return customResponse;
                     }else{
                         userService.insertUser(user);
                         comments.setUserId(user.getId());
@@ -261,9 +258,9 @@ public class IndexController {
                     }
                 }
             }else{
-                costomResponse.setCode(ResponseStateConstant.RESPONSE_EMAIL_ERROR);
-                costomResponse.setMes(MesConstant.ILLEGAL_MAILBOX_FORMAT);
-                return costomResponse;
+                customResponse.setCode(ResponseStateConstant.RESPONSE_EMAIL_ERROR);
+                customResponse.setMes(MesConstant.ILLEGAL_MAILBOX_FORMAT);
+                return customResponse;
             }
             articleService.updArticleComments(comments.getArticleId());
             commentsService.insertComment(comments);
@@ -289,15 +286,15 @@ public class IndexController {
                 articleService.updArticleComments(comments.getArticleId());
                 commentsService.insertComment(comments);
             }else {
-                costomResponse.setCode(ResponseStateConstant.USER_EXCEPTION);
-                costomResponse.setMes(MesConstant.USER_EXCEPTION);
-                return costomResponse;
+                customResponse.setCode(ResponseStateConstant.USER_EXCEPTION);
+                customResponse.setMes(MesConstant.USER_EXCEPTION);
+                return customResponse;
             }
         }
 
-        costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-        costomResponse.setMes(MesConstant.COMMENT_SUCCESS);
-        return costomResponse;
+        customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+        customResponse.setMes(MesConstant.COMMENT_SUCCESS);
+        return customResponse;
     }
 
 

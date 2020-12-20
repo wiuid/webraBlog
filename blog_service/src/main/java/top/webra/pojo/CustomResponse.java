@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
-public class CostomResponse {
+public class CustomResponse {
     private Integer code;
     private String mes;
     private Object data;

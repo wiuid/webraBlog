@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import top.webra.constants.MesConstant;
-import top.webra.pojo.CostomResponse;
+import top.webra.pojo.CustomResponse;
 import top.webra.pojo.Page;
 import top.webra.pojo.Record;
 import top.webra.service.impl.*;
@@ -22,7 +22,7 @@ public class PageController {
     @Autowired
     private ArticleServiceImpl articleService;
     @Autowired
-    private CostomResponse costomResponse;
+    private CustomResponse customResponse;
     @Autowired
     private ArticleLabelServiceImpl articleLabelService;
     @Autowired
@@ -52,35 +52,35 @@ public class PageController {
     }
     @ResponseBody
     @PostMapping("/del")
-    public CostomResponse delPage(Integer pageId){
+    public CustomResponse delPage(Integer pageId){
         if (pageId.equals(1)){
-            costomResponse.setCode(604);
-            costomResponse.setMes("该数据禁止操作");
+            customResponse.setCode(604);
+            customResponse.setMes("该数据禁止操作");
         }else if (pageService.quePageById(pageId) == null){
-            costomResponse.setCode(602);
-            costomResponse.setMes("数据不存在");
+            customResponse.setCode(602);
+            customResponse.setMes("数据不存在");
         }else {
             Page page = pageService.quePageById(pageId);
             pageService.delPage(pageId);
-            costomResponse.setCode(200);
-            costomResponse.setMes(MesConstant.DELETE_SUCCESS);
+            customResponse.setCode(200);
+            customResponse.setMes(MesConstant.DELETE_SUCCESS);
             recordService.insertRecord(new Record("页面管理","删除页面："+ page.getName()));
         }
-        return costomResponse;
+        return customResponse;
     }
     @ResponseBody
     @PostMapping("/set")
-    public CostomResponse saveSet(Page page){
+    public CustomResponse saveSet(Page page){
         if (page == null){
-            costomResponse.setCode(611);
-            costomResponse.setMes("请求内容异常");
+            customResponse.setCode(611);
+            customResponse.setMes("请求内容异常");
         }else {
             pageService.updPage(page);
-            costomResponse.setCode(200);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setCode(200);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
             recordService.insertRecord(new Record("页面管理","更新页面："+ page.getName()));
         }
-        return costomResponse;
+        return customResponse;
     }
 
 
@@ -102,18 +102,18 @@ public class PageController {
     }
     @ResponseBody
     @PostMapping("/edit/save")
-    public CostomResponse editSave(Page page){
+    public CustomResponse editSave(Page page){
         if (page.getId().equals(0)){
             pageService.insertPage(page);
-            costomResponse.setCode(200);
-            costomResponse.setMes(MesConstant.CREATE_SUCCESS);
+            customResponse.setCode(200);
+            customResponse.setMes(MesConstant.CREATE_SUCCESS);
             recordService.insertRecord(new Record("页面管理","新建页面："+ page.getName()));
         }else{
             pageService.updPage(page);
-            costomResponse.setCode(200);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setCode(200);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
             recordService.insertRecord(new Record("页面管理","更新页面："+ page.getName()));
         }
-        return costomResponse;
+        return customResponse;
     }
 }

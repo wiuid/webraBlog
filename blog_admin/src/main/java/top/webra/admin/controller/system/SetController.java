@@ -39,7 +39,7 @@ public class SetController {
     @Autowired
     private CloudStoragServiceImpl cloudStoragService;
     @Autowired
-    private CostomResponse costomResponse;
+    private CustomResponse customResponse;
     @Autowired
     private RecordServiceImpl recordService;
 
@@ -70,23 +70,23 @@ public class SetController {
     }
     @ResponseBody
     @PostMapping("/setting/user/update")
-    public CostomResponse updateUser(User user,HttpSession session){
+    public CustomResponse updateUser(User user, HttpSession session){
         Object webraId = session.getAttribute("webraId");
         if (webraId.toString().equals(String.valueOf(user.getId()))){
             user.setPassword(null);
             userService.updUser(user);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
             recordService.insertRecord(new Record("个人信息管理","更新信息"));
         }else {
-            costomResponse.setMes(MesConstant.USER_EXCEPTION);
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+            customResponse.setMes(MesConstant.USER_EXCEPTION);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
         }
-        return costomResponse;
+        return customResponse;
     }
     @ResponseBody
     @PostMapping("/setting/user/password")
-    public CostomResponse updatePassword(String oldPassword,String newPassword,HttpSession session){
+    public CustomResponse updatePassword(String oldPassword, String newPassword, HttpSession session){
         Object webraId = session.getAttribute("webraId");
         User user = userService.queUserById(Integer.valueOf(webraId.toString()));
         String password = user.getPassword();
@@ -95,15 +95,15 @@ public class SetController {
             String encode = encoder.encode(newPassword);
             user.setPassword(encode);
             userService.updUser(user);
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
             recordService.insertRecord(new Record("个人信息管理","更新密码"));
         }else {
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
-            costomResponse.setMes(MesConstant.USER_OLD_PASSWORD_ERROR);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+            customResponse.setMes(MesConstant.USER_OLD_PASSWORD_ERROR);
         }
 
-        return costomResponse;
+        return customResponse;
     }
 
 
@@ -117,17 +117,17 @@ public class SetController {
     }
     @ResponseBody
     @PostMapping("/setting/blog/update")
-    public CostomResponse updateBlogInfo(Website website){
+    public CustomResponse updateBlogInfo(Website website){
         Integer integer = websiteService.updWebsite(website);
         if (integer.equals(1)){
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
             recordService.insertRecord(new Record("博客信息管理","更新信息"));
         }else {
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
-            costomResponse.setMes(MesConstant.UPDATE_FAILURE);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+            customResponse.setMes(MesConstant.UPDATE_FAILURE);
         }
-        return costomResponse;
+        return customResponse;
     }
 
 
@@ -139,17 +139,17 @@ public class SetController {
     }
     @ResponseBody
     @PostMapping("/setting/article/update")
-    public CostomResponse updateArticleInfo(Set set){
+    public CustomResponse updateArticleInfo(Set set){
         Integer integer = setService.updSet(set);
         if (integer.equals(1)){
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-            costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes(MesConstant.UPDATE_SUCCESS);
             recordService.insertRecord(new Record("文章信息管理","更新信息"));
         }else {
-            costomResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
-            costomResponse.setMes(MesConstant.UPDATE_FAILURE);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+            customResponse.setMes(MesConstant.UPDATE_FAILURE);
         }
-        return costomResponse;
+        return customResponse;
     }
 
     @GetMapping("/setting/image/query")
@@ -175,16 +175,16 @@ public class SetController {
     @Transactional
     @ResponseBody
     @PostMapping("/setting/image/update")
-    public CostomResponse updateImageInfo(CloudStorage cloudStorage,Integer oldId){
+    public CustomResponse updateImageInfo(CloudStorage cloudStorage, Integer oldId){
         CloudStorage cloudStorageOld = new CloudStorage();
         cloudStorageOld.setId(oldId);
         cloudStorageOld.setOffOn(0);
         cloudStoragService.updCloudStorage(cloudStorageOld);
         cloudStoragService.updCloudStorage(cloudStorage);
-        costomResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-        costomResponse.setMes(MesConstant.UPDATE_SUCCESS);
+        customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+        customResponse.setMes(MesConstant.UPDATE_SUCCESS);
         recordService.insertRecord(new Record("图片信息管理","更新信息"));
-        return costomResponse;
+        return customResponse;
     }
 
     @GetMapping("/setting/smtp/query")
