@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableWebSecurity
 @SpringBootApplication(scanBasePackages = "top.webra")
 @MapperScan("top.webra.mapper")
-@EnableTransactionManagement
+//@EnableTransactionManagement
 //@EnableScheduling
 public class WebraBlogApplication {
     public static void main(String[] args) {

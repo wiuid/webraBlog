@@ -2,7 +2,6 @@ package top.webra.security.login.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +12,6 @@ import top.webra.pojo.User;
 import top.webra.service.impl.RecordServiceImpl;
 import top.webra.service.impl.UserServiceImpl;
 
-import javax.servlet.http.HttpSession;
 
 /**
  * @author webra

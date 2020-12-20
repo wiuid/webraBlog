@@ -70,7 +70,7 @@
                                 <span th:if="${codeLabel} eq 404" style="margin-left:10px">
                                     暂无标签
                                 </span>
-                                <span th:if="${code} ne 404" style="margin-left:10px">
+                                <span th:if="${codeLabel} ne 404" style="margin-left:10px">
                                     <span>Tag:</span>
                                     <a th:each="label:${labels}" class="un" th:href="'/tag/'+${label.name}" target="_blank"><span style="margin:0 5px" th:text="${label.name}">sd</span></a>
                                 </span>
@@ -217,12 +217,12 @@
             </div>
 
             <!--悬浮按钮-->
-            <div class="hoverButton hideButton" style="display:none">
+            <div th:if="${code} eq 200" class="hoverButton hideButton" style="display:none">
                 <button id="top">
                     <i class="glyphicon glyphicon-chevron-up"></i>
                 </button>
             </div>
-            <div  class="hoverButton" style="top: 85%;left: 90%">
+            <div th:if="${code} eq 200" class="hoverButton" style="top: 85%;left: 90%">
                 <button id="toCommentC" type="button">
                     <!--评论内容-->
                     <i class="glyphicon glyphicon-comment"></i>
@@ -248,7 +248,7 @@
         $('#nav-tail').load('/index/nav/tail');
     }
 
-    // 页面加载不完全是的遮罩
+    // 页面加载不完全时的遮罩
     document.onreadystatechange = subSomething;//当页面加载状态改变的时候执行这个方法.
     function subSomething() {
         if(document.readyState == "complete"){ //当页面加载状态为完全结束时进入
