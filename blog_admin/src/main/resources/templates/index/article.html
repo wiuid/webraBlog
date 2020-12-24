@@ -44,7 +44,7 @@
     <section class="main">
         <div class="bg">
             <!--顶部导航-->
-            <div th:replace="/index/common/nav :: nav"></div>
+            <div th:replace="index/common/nav :: nav"></div>
 
             <!--文章主体-->
             <div th:if="${code} eq 200" class="container" style="padding: 0">
@@ -86,7 +86,7 @@
             <div th:if="${code} eq 404" class="text-center" style="margin-top: 30px;font-size: 20px">
                 <div clas="row">您查看的文章不存在</div>
                 <div clas="row" >
-                    <div th:replace="/index/common/sails :: sails"></div>
+                    <div th:replace="index/common/sails :: sails"></div>
                 </div>
             </div>
             <!--评论主体-->
@@ -232,7 +232,7 @@
         </div>
     </section>
     <!--尾部版权信息-->
-    <div th:replace="/index/common/nav-tail :: nav-tail"></div>
+    <div th:replace="index/common/nav-tail :: nav-tail"></div>
 </div>
 </body>
 <script>

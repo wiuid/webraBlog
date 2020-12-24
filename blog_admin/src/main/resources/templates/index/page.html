@@ -33,12 +33,12 @@
     <section class="main">
         <div class="bg">
             <!--顶部导航-->
-            <div th:replace="/index/common/nav :: nav"></div>
+            <div th:replace="index/common/nav :: nav"></div>
             <!--主体循环-->
             <div th:if="${code} eq 404" class="text-center" style="margin-top: 30px;font-size: 20px">
                 <div clas="row">您查看的页面无内容</div>
                 <div clas="row" >
-                    <div th:replace="/index/common/sails :: sails"></div>
+                    <div th:replace="index/common/sails :: sails"></div>
                 </div>
             </div>
             <div th:utext="${text}" class="row" style="margin-top: 20px;padding:0 50px;user-select: none">
@@ -54,7 +54,7 @@
     </section>
 
     <!--    尾部版权信息-->
-    <div th:replace="/index/common/nav-tail :: nav-tail"></div>
+    <div th:replace="index/common/nav-tail :: nav-tail"></div>
 
 
 </div>

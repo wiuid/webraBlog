@@ -249,7 +249,6 @@ public class ArticleController {
     @PostMapping("/upload/cover/map")
     public String coverMap(@RequestPart("file") MultipartFile file) throws IOException {
         HashMap<String, String> data = new HashMap<>();
-        String originalFilename = file.getOriginalFilename();
         // 文件名
         String fileNameOld =file.getOriginalFilename();
         // 后缀名
@@ -290,14 +289,8 @@ public class ArticleController {
                     data.put("code","200");
                     data.put("location","/static/images/" + fileName);
                 }else {
-                    try {
-                        file.transferTo(dest);
-                        data.put("code","200");
-                        data.put("location","/static/images/" + fileName);
-                    } catch (IOException e) {
-                        data.put("code",ResponseStateConstant.RESPONSE_FAILURE.toString());
-                        data.put("location","二层--后端图片存储出错!请管理员检查");
-                    }
+                    data.put("code","200");
+                    data.put("location","/static/images/" + fileName);
                 }
                 fileHashService.insertFileHash(new FileHash(1,fileName, fileMd5));
             } catch (IOException e) {
