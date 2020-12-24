@@ -29,6 +29,9 @@ public class InfoConstant {
     public  static final String SEARCH_NOT_FOUNT_ARTICLE_START = "很可惜,没有搜索到关键词 ";
     public  static final String SEARCH_NOT_FOUNT_ARTICLE_END = " 的任何文章~~";
 
+    public  static final Long INIT_DATE = 1577808000000L;
+
+
 
 
 

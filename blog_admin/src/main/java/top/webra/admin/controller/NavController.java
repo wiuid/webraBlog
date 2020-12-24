@@ -2,13 +2,13 @@ package top.webra.admin.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import top.webra.pojo.Menu;
 import top.webra.pojo.User;
 import top.webra.pojo.Website;
-import top.webra.security.utils.UserUtil;
 import top.webra.service.impl.MenuServiceImpl;
 import top.webra.service.impl.UserServiceImpl;
 import top.webra.service.impl.WebsiteServiceImpl;
@@ -27,8 +27,6 @@ public class NavController {
     private UserServiceImpl userService;
 
     @Autowired
-    private UserUtil userUtil;
-    @Autowired
     private MenuServiceImpl menuService;
     @Autowired
     private WebsiteServiceImpl websiteService;
@@ -36,7 +34,9 @@ public class NavController {
 
     @GetMapping("/system/nav")
     public String getSystemNav(Model model){
-        User user = userUtil.getUserBySecurityContextHolder();
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.queUserByUsername(name);
+
         String portrait = user.getPortrait();
         model.addAttribute("portrait",portrait);
         return "system/common/nav::nav";

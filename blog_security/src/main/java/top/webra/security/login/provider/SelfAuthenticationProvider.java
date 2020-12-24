@@ -37,7 +37,7 @@ public class SelfAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         // 验证码判断
-//        暂时不写
+//        暂时不使用
 
         // 交给userLoginService 看看是否存在该用户
         UserLogin userDetails = (UserLogin)userLoginService.loadUserByUsername(username);

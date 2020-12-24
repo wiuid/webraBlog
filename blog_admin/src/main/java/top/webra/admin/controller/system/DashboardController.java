@@ -3,6 +3,7 @@ package top.webra.admin.controller.system;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,10 @@ public class DashboardController {
     @Autowired
     private RecordServiceImpl recordService;
 
+    @GetMapping
+    public String toDashboard(){
+        return "redirect:/system/dashboard";
+    }
 
     @RequestMapping("/login")
     public String login(){

@@ -15,7 +15,6 @@ public class UserUtil {
 
     public User getUserBySecurityContextHolder(){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.queUserByUsername(name);
-        return user;
+        return userService.queUserByUsername(name);
     }
 }

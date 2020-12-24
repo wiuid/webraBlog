@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.webra.constants.InfoConstant;
 import top.webra.constants.MesConstant;
 import top.webra.constants.ResponseStateConstant;
-import top.webra.pojo.CustomResponse;
+import top.webra.admin.bean.CustomResponse;
 import top.webra.pojo.User;
 import top.webra.service.impl.UserServiceImpl;
 
@@ -26,17 +27,16 @@ public class InitController {
     @GetMapping
     public String init(){
         User user = userService.queUserById(1);
-        if (user.getCreateTime().getTime() == 1577808000000L){
+        if (user.getCreateTime().getTime() == InfoConstant.INIT_DATE){
             return "init/userInit";
         }
-
         return "redirect:/";
     }
     @ResponseBody
     @PostMapping
     public CustomResponse init(User user){
         User userInit = userService.queUserById(1);
-        if (userInit.getCreateTime().getTime() == 1577808000000L){
+        if (userInit.getCreateTime().getTime() == InfoConstant.INIT_DATE){
             // 执行更新
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             userService.initUser(user);

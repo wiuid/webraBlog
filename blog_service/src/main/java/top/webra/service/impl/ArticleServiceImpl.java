@@ -8,9 +8,9 @@ import top.webra.mapper.ArticleMapper;
 import top.webra.pojo.Archive;
 import top.webra.pojo.Article;
 import top.webra.service.ArticleService;
-import top.webra.utils.DateUtil;
 
 import javax.validation.constraints.Null;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -111,7 +111,9 @@ public class ArticleServiceImpl implements ArticleService {
             Archive archive = new Archive();
             Article article = articles.get(index);
             Date date = new Date(article.getCreateTime().getTime());
-            String yyyy = DateUtil.getFormatDate(date, "yyyy");
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+            String yyyy = simpleDateFormat.format(date);
             if (!archives.isEmpty()){
                 for (Archive archive1 : archives) {
                     if (archive1.getYear().equals(yyyy)) {

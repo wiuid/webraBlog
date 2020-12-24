@@ -8,7 +8,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.webra.constants.ResponseStateConstant;
-import top.webra.pojo.CustomResponse;
+import top.webra.admin.bean.CustomResponse;
 import top.webra.pojo.FileHash;
 import top.webra.pojo.Record;
 import top.webra.service.impl.FileHashServiceImpl;

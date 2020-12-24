@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import top.webra.constants.MesConstant;
-import top.webra.pojo.CustomResponse;
+import top.webra.admin.bean.CustomResponse;
 import top.webra.pojo.Page;
 import top.webra.pojo.Record;
 import top.webra.service.impl.*;
