@@ -13,6 +13,7 @@ import top.webra.constants.MesConstant;
 import top.webra.constants.ResponseStateConstant;
 import top.webra.pojo.*;
 import top.webra.service.impl.*;
+import top.webra.utils.PathUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ public class AdministrationController {
     @Autowired
     private RecordServiceImpl recordService;
 
-    private String imagePath = ClassUtils.getDefaultClassLoader().getResource("static/images/").getPath();
 
 
     ////////////////////////////----- 图片管理 -----////////////////////////////
@@ -67,7 +67,7 @@ public class AdministrationController {
         String[] split = imageName.split("\\.");
         Integer integer = fileHashService.delFileHash(split[0]);
         if (integer==1){
-            String s = imagePath + imageName;
+            String s = PathUtil.imagePatg() + imageName;
             File filePath = new File(s);
             boolean delete = filePath.delete();
             recordService.insertRecord(new Record("图片操作","删除图片"));

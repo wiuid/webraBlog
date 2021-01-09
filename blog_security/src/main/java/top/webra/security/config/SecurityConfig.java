@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/article/**",
                         "/search/**","/tag/**","/classify/**",
                         "/static/**",
+                        "/gallery/**",
                         "/system/login", "/defaultKaptcha").permitAll()
                 .anyRequest().authenticated();
 

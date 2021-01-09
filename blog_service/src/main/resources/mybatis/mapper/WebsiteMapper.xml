@@ -16,6 +16,8 @@
         update website
         <set>
             <if test="name!='' and name!=null">`name`=#{name},</if>
+            <if test="favicon!='' and favicon!=null">favicon=#{favicon},</if>
+            <if test="logo!='' and logo!=null">logo=#{logo},</if>
             <if test="address!='' and address!=null">address=#{address},</if>
             <if test="info!='' and info!=null">info=#{info}</if>
         </set>

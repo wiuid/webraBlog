@@ -4,15 +4,17 @@ package top.webra.admin.controller.system;
 import com.qiniu.util.Md5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.webra.constants.ResponseStateConstant;
 import top.webra.admin.bean.CustomResponse;
 import top.webra.pojo.FileHash;
 import top.webra.pojo.Record;
+import top.webra.pojo.Website;
 import top.webra.service.impl.FileHashServiceImpl;
 import top.webra.service.impl.RecordServiceImpl;
+import top.webra.service.impl.WebsiteServiceImpl;
+import top.webra.utils.PathUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,28 +33,40 @@ public class FileController {
     private FileHashServiceImpl fileHashService;
     @Autowired
     private RecordServiceImpl recordService;
+    @Autowired
+    private WebsiteServiceImpl websiteService;
 
-    private String imagePath = ClassUtils.getDefaultClassLoader().getResource("static/images/").getPath();
+//    private String imagePath = ClassUtils.getDefaultClassLoader().getResource("").getPath()
+//            .replaceFirst("file:/","")
+//            .replaceFirst("blog-admin-1.0-SNAPSHOT.jar!/BOOT-INF/classes!", "img");
 
     @ResponseBody
     @PostMapping("/logo/upload")
     public CustomResponse uploadLogo(@RequestPart("file_data") MultipartFile file){
         // 获得静态资源路径
-        String path = ClassUtils.getDefaultClassLoader().getResource("static/images/fav").getPath() + "/logo.png";
-        File filePath = new File(path);
-        boolean delete = filePath.delete();
-        if (delete){
-            try {
-                file.transferTo(filePath);
-                customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                customResponse.setMes("http://localhost:8080/static/images/fav/logo.png");
-                recordService.insertRecord(new Record("网站Logo","更新操作"));
-            } catch (IOException e) {
-                customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
-            }
-        }else {
+        File filePath = new File(PathUtil.imagePatg() + "/logo.png");
+        try {
+            file.transferTo(filePath);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes("/gallery/img/logo.png");
+            recordService.insertRecord(new Record("网站Logo","更新操作"));
+        } catch (IOException e) {
             customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
         }
+//        boolean delete = filePath.delete();
+//        if (delete){
+//            try {
+//                file.transferTo(filePath);
+//                customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+//                customResponse.setMes("/static/img/logo.png");
+//                recordService.insertRecord(new Record("网站Logo","更新操作"));
+//                websiteService.updWebsite(new Website("","/static/img/logo.png"));
+//            } catch (IOException e) {
+//                customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+//            }
+//        }else {
+//            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+//        }
 
         return customResponse;
     }
@@ -60,21 +74,30 @@ public class FileController {
     @PostMapping("/fav/upload")
     public CustomResponse uploadFav(@RequestPart("file_data") MultipartFile file){
         // 获得静态资源路径
-        String path = ClassUtils.getDefaultClassLoader().getResource("static/images/fav").getPath() + "/fav.ico";
-        File filePath = new File(path);
-        boolean delete = filePath.delete();
-        if (delete){
-            try {
-                file.transferTo(filePath);
-                customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                customResponse.setMes("http://localhost:8080/static/images/fav/fav.ico");
-                recordService.insertRecord(new Record("网站Favicon","更新操作"));
-            } catch (IOException e) {
-                customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
-            }
-        }else {
+        File filePath = new File(PathUtil.imagePatg() + "/fav.ico");
+        try {
+            file.transferTo(filePath);
+            customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+            customResponse.setMes("/gallery/img/fav.ico");
+            recordService.insertRecord(new Record("网站Favicon","更新操作"));
+        } catch (IOException e) {
             customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
         }
+
+//        boolean delete = filePath.delete();
+//        if (delete){
+//            try {
+//                file.transferTo(filePath);
+//                customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
+//                customResponse.setMes("/static/img/fav.ico");
+//                recordService.insertRecord(new Record("网站Favicon","更新操作"));
+//                websiteService.updWebsite(new Website("","/static/img/logo.png"));
+//            } catch (IOException e) {
+//                customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+//            }
+//        }else {
+//            customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);
+//        }
 
         return customResponse;
     }
@@ -93,16 +116,15 @@ public class FileController {
             // 如果不存在，则向静态资源路径添加该文件，并向数据库插入查image的记录
             if (fileHash1==null){
                 fileName = fileMd5 + "." + split[split.length - 1];
-                File filePath = new File(imagePath+fileName);
-
+                File filePath = new File(PathUtil.imagePatg()+fileName);
                 file.transferTo(filePath);
                 customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                customResponse.setMes("/static/images/"+fileName);
+                customResponse.setMes("/gallery/img/"+fileName);
                 FileHash fileHash = new FileHash(1,fileName, fileMd5);
                 fileHashService.insertFileHash(fileHash);
             }else {
                 customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
-                customResponse.setMes("/static/images/"+fileHash1.getFileName());
+                customResponse.setMes("/gallery/img/"+fileHash1.getFileName());
             }
         } catch (IOException e) {
             customResponse.setCode(ResponseStateConstant.RESPONSE_FAILURE);

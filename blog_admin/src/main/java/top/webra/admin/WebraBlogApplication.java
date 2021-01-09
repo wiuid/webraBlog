@@ -4,10 +4,10 @@ package top.webra.admin;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.io.IOException;
 
 /**
  * 启动入口
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 //@EnableScheduling
 public class WebraBlogApplication {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         SpringApplication.run(WebraBlogApplication.class,args);
         System.out.println(" __          __    _                          ____   _\n" +
                 " \\ \\        / /   | |                        |  _ \\ | |\n" +

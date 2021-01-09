@@ -18,6 +18,7 @@ import top.webra.constants.MesConstant;
 import top.webra.constants.ResponseStateConstant;
 import top.webra.pojo.*;
 import top.webra.service.impl.*;
+import top.webra.utils.PathUtil;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
@@ -51,7 +52,7 @@ public class ArticleController {
     @Autowired
     private RecordServiceImpl recordService;
 
-    private String imagePath = ClassUtils.getDefaultClassLoader().getResource("static/images/").getPath();
+
 
     ////////////////////////////----- 所有文章页 -----////////////////////////////
 
@@ -215,7 +216,7 @@ public class ArticleController {
     public String uploadImage(@RequestPart("file") MultipartFile file) throws IOException {
         HashMap<String, String> data = new HashMap<>();
         // 后缀名获取
-        String suffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        String suffixName = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
         String fileMd5 = Md5.md5(file.getBytes());
 
         FileHash fileHash = fileHashService.queFileHashByFileHash(fileMd5);
@@ -223,11 +224,7 @@ public class ArticleController {
             String fileName = fileMd5 + suffixName;
 
             // 获得静态资源路径
-            File dest = new File(imagePath + fileName);
-            if (!dest.getParentFile().exists()) {
-                // 如果目录不存在则创建目录
-                dest.getParentFile().mkdirs();
-            }
+            File dest = new File(PathUtil.imagePatg() + fileName);
             try {
                 // 将文件写入目录
                 file.transferTo(dest);
@@ -235,11 +232,11 @@ public class ArticleController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            data.put("location","/static/images/" + fileName);
+            data.put("location","/gallery/img/" + fileName);
             String json = JSON.toJSONString(data);
             return json;
         }else {
-            data.put("location","/static/images/" + fileHash.getFileName());
+            data.put("location","/gallery/img/" + fileHash.getFileName());
             String json = JSON.toJSONString(data);
             return json;
         }
@@ -258,7 +255,7 @@ public class ArticleController {
         FileHash fileHash = fileHashService.queFileHashByFileHash(fileMd5);
         if (fileHash==null){
             String fileName = fileMd5 + "." + suffixName;
-            File dest = new File(imagePath + fileName);
+            File dest = new File(PathUtil.imagePatg() + fileName);
 
             try {
                 file.transferTo(dest);
@@ -278,7 +275,7 @@ public class ArticleController {
                     ImageIO.write(subimage, suffixName, dest);
 
                     data.put("code","200");
-                    data.put("location","/static/images/" + fileName);
+                    data.put("location","/gallery/img/" + fileName);
                 }else if (proportion < 5.0/3.0){
                     // 高度很长
                     double imageYDouble = width / 5.0d * 3;
@@ -287,10 +284,10 @@ public class ArticleController {
                     ImageIO.write(subimage,suffixName,dest);
 
                     data.put("code","200");
-                    data.put("location","/static/images/" + fileName);
+                    data.put("location","/gallery/img/" + fileName);
                 }else {
                     data.put("code","200");
-                    data.put("location","/static/images/" + fileName);
+                    data.put("location","/gallery/img/" + fileName);
                 }
                 fileHashService.insertFileHash(new FileHash(1,fileName, fileMd5));
             } catch (IOException e) {
@@ -302,7 +299,7 @@ public class ArticleController {
             return json;
         }else {
             data.put("code","200");
-            data.put("location","/static/images/" + fileHash.getFileName());
+            data.put("location","/gallery/img/" + fileHash.getFileName());
             String json = JSON.toJSONString(data);
             return json;
         }

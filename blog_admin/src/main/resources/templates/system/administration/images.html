@@ -53,7 +53,7 @@
                 <div class="row">
                     <div th:each="image:${images}" class="col-md-2 col-sm-3 col-xs-6" style="margin-bottom:5px;position:relative">
                         <div style="background-color: #ffffff;height: 120px">
-                            <div class="row" style="height: 100px;margin:0"><img style="height: 100px;width: 100%;" th:src="'/static/images/'+${image.fileName}"></div>
+                            <div class="row" style="height: 100px;margin:0"><img style="height: 100px;width: 100%;" th:src="'/gallery/img/'+${image.fileName}"></div>
                             <div class="row" style="background-color: rgba(0,0,0,0.3);margin:0">
                                 <div class="col-sm-6 col-xs-6" style="float: right">
                                     <a class="glyphicon glyphicon-trash"
