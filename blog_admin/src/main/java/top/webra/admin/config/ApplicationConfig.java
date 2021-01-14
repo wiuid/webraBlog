@@ -20,15 +20,29 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        System.out.println(imagePath);
-        String img = imagePath.replaceFirst("/blog-admin-1.0-SNAPSHOT.jar!/BOOT-INF/classes!", "");
-        // 转换成windows的标识符
-        String filePath = img.replaceAll("/", "\\\\");
-//        img = new File(img).toString()+ "\\";
-        System.out.println(filePath);
-        registry.addResourceHandler("/gallery/**").addResourceLocations(filePath);
-//        System.out.println("file:\\E:\\Code\\webraBlog\\blog_admin\\target\\classes\\img\\");
-//        registry.addResourceHandler("/gallery/**").addResourceLocations("file:\\E:\\Code\\webraBlog\\blog_admin\\target\\classes\\");
-        super.addResourceHandlers(registry);
+
+        String systemOs = System.getProperty("os.name").toLowerCase();
+        System.out.println("_______________ApplicationConfig_________________");
+        if (systemOs.contains("windows")) {
+            System.out.println("_______________windows_________________");
+            System.out.println(imagePath);
+            String img = imagePath.replaceFirst("/blog-admin-1.0-SNAPSHOT.jar!/BOOT-INF/classes!", "");
+            // 转换成windows的标识符
+            String filePath = img.replaceAll("/", "\\\\");
+            System.out.println(filePath);
+            registry.addResourceHandler("/gallery/**").addResourceLocations(filePath);
+            super.addResourceHandlers(registry);
+            System.out.println("_______________windows_________________");
+        }else if (systemOs.contains("linux")){
+            System.out.println("_______________Linux_________________");
+            System.out.println(imagePath);
+            String filePath = imagePath.replaceFirst("/blog-admin-1.0-SNAPSHOT.jar!/BOOT-INF/classes!", "");
+            System.out.println(filePath);
+            registry.addResourceHandler("/gallery/**").addResourceLocations(filePath);
+            super.addResourceHandlers(registry);
+            System.out.println("_______________Linux_________________");
+        }
+        System.out.println("_______________ApplicationConfig_________________");
+        // linux  usr/local/webra/blog/img
     }
 }
