@@ -170,37 +170,59 @@ public class IndexController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/article/comments/{articleId}" , method = RequestMethod.GET)
+    @GetMapping("/article/comments/{articleId}")
     public String articleComments(@PathVariable Integer articleId,HttpSession session,Model model){
         // log.info("进入了获取评论的方法");
         List<Comments> comments = commentsService.queCommentsByArticleId(articleId);
         // log.info("获取到的comments数据:" + comments);
         // 提取的评论处理之后返回给model
-        if (comments.isEmpty()){
-            model.addAttribute("isComments",0);
-            model.addAttribute("comments",MesConstant.COMMENTS_NULL);
+
+        Article article = articleService.queArticleById(articleId);
+        if (article != null){
+            model.addAttribute("code",ResponseStateConstant.RESPONSE_SUCCESS);
+            if (comments.isEmpty()){
+                model.addAttribute("isComments",0);
+                model.addAttribute("comments",MesConstant.COMMENTS_NULL);
+            }else {
+                List<Comments> commentsList = commentsService.commentsHandle(comments);
+                model.addAttribute("isComments",1);
+                model.addAttribute("comments",commentsList);
+            }
+            Object webraId = session.getAttribute("webraId");
+            if (webraId != null){
+                if (webraId instanceof Integer){
+                    Integer userId = (Integer)webraId;
+                    User user = userService.queUserById(userId);
+                    log.info("获取评论时获取到用户:" + user.getNickname());
+                    model.addAttribute("userId",userId);
+                    model.addAttribute("userNickname",user.getNickname());
+                }
+            }else {
+                model.addAttribute("userId",0);
+            }
         }else {
-            List<Comments> commentsList = commentsService.commentsHandle(comments);
-            model.addAttribute("isComments",1);
-            model.addAttribute("comments",commentsList);
+            model.addAttribute("code",ResponseStateConstant.RESPONSE_FAILURE);
         }
 
-        Object webraId = session.getAttribute("webraId");
-        if (webraId == null){
-            // 获取评论时没有获取到用户
-            model.addAttribute("code",ResponseStateConstant.RESPONSE_FAILURE);
-            model.addAttribute("userId",0);
-            model.addAttribute("userNickname","notUser");
-        }else {
-            if (webraId instanceof Integer){
-                Integer userId = (Integer)webraId;
-                User user = userService.queUserById(userId);
-                log.info("获取评论时获取到用户:" + user.getNickname());
-                model.addAttribute("code",ResponseStateConstant.RESPONSE_SUCCESS);
-                model.addAttribute("userId",userId);
-                model.addAttribute("userNickname",user.getNickname());
-            }
-        }
+
+
+//        Object webraId = session.getAttribute("webraId");
+//        if (webraId == null){
+//            // 获取评论时没有获取到用户
+//            model.addAttribute("code",ResponseStateConstant.RESPONSE_FAILURE);
+//            model.addAttribute("userId",0);
+//            model.addAttribute("userNickname","notUser");
+//        }else {
+//            if (webraId instanceof Integer){
+//                Integer userId = (Integer)webraId;
+//                User user = userService.queUserById(userId);
+//                log.info("获取评论时获取到用户:" + user.getNickname());
+//                model.addAttribute("code",ResponseStateConstant.RESPONSE_SUCCESS);
+//                model.addAttribute("userId",userId);
+//                model.addAttribute("userNickname",user.getNickname());
+//            }
+//        }
+
         return "index/article::comments";
     }
 
