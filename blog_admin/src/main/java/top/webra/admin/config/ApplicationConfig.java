@@ -20,9 +20,10 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
+        // 获取系统名称 -- 全转为小写
         String systemOs = System.getProperty("os.name").toLowerCase();
         System.out.println("_______________ApplicationConfig_________________");
+        // contains 是否包含某字段   返回 true/false
         if (systemOs.contains("windows")) {
             System.out.println("_______________windows_________________");
             System.out.println(imagePath);

@@ -67,7 +67,7 @@ public class AdministrationController {
         String[] split = imageName.split("\\.");
         Integer integer = fileHashService.delFileHash(split[0]);
         if (integer==1){
-            String s = PathUtil.imagePatg() + imageName;
+            String s = PathUtil.imagePath() + imageName;
             File filePath = new File(s);
             boolean delete = filePath.delete();
             recordService.insertRecord(new Record("图片操作","删除图片"));

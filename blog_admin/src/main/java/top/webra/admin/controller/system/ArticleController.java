@@ -224,7 +224,7 @@ public class ArticleController {
             String fileName = fileMd5 + suffixName;
 
             // 获得静态资源路径
-            File dest = new File(PathUtil.imagePatg() + fileName);
+            File dest = new File(PathUtil.imagePath() + fileName);
             try {
                 // 将文件写入目录
                 file.transferTo(dest);
@@ -255,7 +255,7 @@ public class ArticleController {
         FileHash fileHash = fileHashService.queFileHashByFileHash(fileMd5);
         if (fileHash==null){
             String fileName = fileMd5 + "." + suffixName;
-            File dest = new File(PathUtil.imagePatg() + fileName);
+            File dest = new File(PathUtil.imagePath() + fileName);
 
             try {
                 file.transferTo(dest);

@@ -44,7 +44,7 @@ public class FileController {
     @PostMapping("/logo/upload")
     public CustomResponse uploadLogo(@RequestPart("file_data") MultipartFile file){
         // 获得静态资源路径
-        File filePath = new File(PathUtil.imagePatg() + "/logo.png");
+        File filePath = new File(PathUtil.imagePath() + "/logo.png");
         try {
             file.transferTo(filePath);
             customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
@@ -74,7 +74,7 @@ public class FileController {
     @PostMapping("/fav/upload")
     public CustomResponse uploadFav(@RequestPart("file_data") MultipartFile file){
         // 获得静态资源路径
-        File filePath = new File(PathUtil.imagePatg() + "/fav.ico");
+        File filePath = new File(PathUtil.imagePath() + "/fav.ico");
         try {
             file.transferTo(filePath);
             customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
@@ -116,7 +116,7 @@ public class FileController {
             // 如果不存在，则向静态资源路径添加该文件，并向数据库插入查image的记录
             if (fileHash1==null){
                 fileName = fileMd5 + "." + split[split.length - 1];
-                File filePath = new File(PathUtil.imagePatg()+fileName);
+                File filePath = new File(PathUtil.imagePath()+fileName);
                 file.transferTo(filePath);
                 customResponse.setCode(ResponseStateConstant.RESPONSE_SUCCESS);
                 customResponse.setMes("/gallery/img/"+fileName);
