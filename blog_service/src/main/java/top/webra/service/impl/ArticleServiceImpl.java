@@ -88,9 +88,14 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> getRotograms() {
         ArrayList<Article> articles = new ArrayList<>();
         String[] strings = new String[3];
-        strings[0] = "/static/images/rotograms/rotograms01.png";
-        strings[1] = "/static/images/rotograms/rotograms02.png";
-        strings[2] = "/static/images/rotograms/rotograms03.png";
+        // 本地图片
+//        strings[0] = "/static/images/rotograms/rotograms01.png";
+//        strings[1] = "/static/images/rotograms/rotograms02.png";
+//        strings[2] = "/static/images/rotograms/rotograms03.png";
+        // 云端图片
+        strings[0] = "https://i.postimg.cc/fyMqMpmm/rotograms01.png";
+        strings[1] = "https://i.postimg.cc/6qzjqcfS/rotograms02.png";
+        strings[2] = "https://i.postimg.cc/xjPF6jVR/rotograms03.png";
         int coun = 0;
         for (String string : strings) {
             Article article = new Article();
@@ -99,6 +104,7 @@ public class ArticleServiceImpl implements ArticleService {
             article.setCoverMap(string);
             articles.add(article);
         }
+
         return articles;
     }
 
